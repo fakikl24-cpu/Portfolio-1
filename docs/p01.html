@@ -11,7 +11,7 @@
 
 
 
-<title>Portfolio 1</title>
+<title>Well-being by Demographics</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,7 +290,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 1</h1>
+<h1 class="title toc-ignore">Well-being by Demographics</h1>
 
 </div>
 
@@ -304,34 +304,27 @@ and of high quality in terms of writing, grammar, presentation, etc.</p>
 </blockquote>
 <pre class="r"><code>library(tidyverse) 
 library(tidyr)
-data(fish_encounters)</code></pre>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-eget nibh vel est aliquet iaculis at placerat sem. Aenean faucibus
-iaculis ultricies. Nullam consequat odio in ultricies ullamcorper. Etiam
-venenatis in est vitae ullamcorper. Nam vitae urna ut dolor rhoncus
-aliquet at vel neque. Quisque tristique leo finibus nisi interdum, sit
-amet tempor risus viverra. Donec mollis vulputate sodales. Nunc ornare,
-leo quis euismod eleifend, eros mi maximus felis, vel varius lacus dui
-eget nibh. Duis vitae nunc nisl. Donec accumsan aliquam elit, eu
-fringilla quam pulvinar eget.</p>
-<p>Mauris in ligula mauris. Curabitur facilisis pharetra metus eget
-lobortis. In egestas nibh sit amet faucibus eleifend. Suspendisse
-imperdiet viverra blandit. Phasellus consectetur tincidunt eros eu
-facilisis. Quisque maximus, orci eget sodales aliquam, velit lorem
-semper dolor, nec convallis erat ipsum mattis velit. Pellentesque
-porttitor, mauris vitae aliquam mattis, metus nisl viverra turpis, vel
-convallis metus sapien et ex. Nunc consequat ipsum id dolor eleifend,
-sit amet semper eros sodales. Pellentesque consectetur, dui quis
-venenatis malesuada, nunc lorem lacinia libero, vitae malesuada dui arcu
-in augue. Aliquam id sagittis libero. Vestibulum aliquet sagittis
-libero, non posuere odio molestie ut. Curabitur lacus enim, viverra vel
-odio non, pretium efficitur elit. Mauris posuere efficitur interdum.
-Nunc sed bibendum turpis, quis fringilla velit. Phasellus eu lorem
-lobortis eros molestie laoreet.</p>
-<pre class="r"><code># Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = &quot;identity&quot;) +
-  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;)</code></pre>
+library(haven)
+
+confession &lt;- read_sav(&quot;C:/Users/krysc/OneDrive/Desktop/Catholicism Study/with recode and UPDATED WHO WELLBEING SCORE scores.sav&quot;)
+View(confession)</code></pre>
+<p>For this project, I will be examining the relationship between
+confession attendance and different demographics variables such as
+political orientation, yearly income, gender, education, and age. To
+begin, I have read in my data from SPSS using the code from the “Import
+Dataset” tab.</p>
+<p>For this project, I will run bar plots showing the confession
+attendance of different demographic variables. To begin, I will examine
+the frequency of confession attendance for different political
+orientations</p>
+<pre class="r"><code>ggplot(data = confession, aes(x = RECODEConfAttend)) +
+  geom_bar()+
+  facet_wrap(~Q106, nrow = 2) +
+  labs(title = &quot;Plot of Well-Being and Confession Attendance&quot;,
+       subtitle = &quot;Faceted by Political Orientation&quot;,
+       x = &quot;Confession Attendance&quot;)</code></pre>
+<pre><code>## Warning: Removed 1 row containing non-finite outside the scale range
+## (`stat_count()`).</code></pre>
 <p><img src="p01_files/figure-html/unnamed-chunk-1-1.png" alt="" width="672" /></p>
 <p>Sed mollis purus faucibus leo finibus, ut pharetra nibh elementum.
 Nulla id orci lorem. Mauris sollicitudin mi eget tellus vehicula, ut
@@ -343,7 +336,8 @@ euismod.</p>
 <pre class="r"><code># Create a barplot of the number of fish encounters by species
 ggplot(data = fish_encounters, aes(x = station, y = seen)) +
   geom_bar(stat = &quot;identity&quot;) +
-  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;)</code></pre>
+  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;) +
+  theme_minimal()</code></pre>
 <p><img src="p01_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" /></p>
 <p>Mauris placerat in velit a pharetra. Nulla viverra bibendum lectus,
 ut lobortis nibh. Aenean malesuada, orci vitae dictum placerat, enim
@@ -355,7 +349,8 @@ feugiat risus at turpis tincidunt viverra.</p>
 <pre class="r"><code># Create a barplot of the number of fish encounters by species
 ggplot(data = fish_encounters, aes(x = station, y = seen)) +
   geom_bar(stat = &quot;identity&quot;) +
-  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;)</code></pre>
+  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;) +
+  theme_classic()</code></pre>
 <p><img src="p01_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
 <p>Donec sagittis suscipit orci in ultrices. Vivamus iaculis eleifend
 est et dictum. Fusce non urna at lacus dapibus tincidunt ac sed nibh.
