@@ -8,10 +8,13 @@ title: "Well-being by Demographics"
 library(tidyverse) 
 library(tidyr)
 library(haven)
+library(forcats)
 
 confession <- read_sav("C:/Users/krysc/OneDrive/Desktop/Catholicism Study/with recode and UPDATED WHO WELLBEING SCORE scores.sav")
 View(confession)
 ```
+
+MAIN QUESTION: HOW OFTEN DO DIFFERENT GROUPS ATTEND CONFESSION?!
 
 For this project, I will be examining the relationship between confession attendance and different demographics variables such as political orientation, yearly income, gender, education, and age. To begin, I have read in my data from SPSS using the code from the "Import Dataset" tab. 
 
@@ -19,10 +22,20 @@ For this project, I will run bar plots showing the confession attendance of diff
 
 ```{r}
 
+select(
+  confession, 
+  RECODEConfAttend,
+  Q106
+)
+
+confession <- confession %>%
+ mutate(
+    Poli_Orientation = fct_other(as_factor(Q106), drop = c("1", "2", "3")) 
+  )
 
 ggplot(data = confession, aes(x = RECODEConfAttend)) +
   geom_bar()+
-  facet_wrap(~Q106, nrow = 2) +
+  facet_wrap(~Poli_Orientation, nrow = 2) +
   labs(title = "Plot of Well-Being and Confession Attendance",
        subtitle = "Faceted by Political Orientation",
        x = "Confession Attendance")
