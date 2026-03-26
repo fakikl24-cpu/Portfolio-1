@@ -29,15 +29,22 @@ select(
 )
 
 confession <- confession %>%
- mutate(
-    Poli_Orientation = fct_other(as_factor(Q106), drop = c("1", "2", "3")) 
+  mutate(
+    Q106 = as.character(Q106),
+    Poli_Orientation = case_when(
+      Q106 == "1" ~ "Democrat",
+      Q106 == "2" ~ "Republican", 
+      Q106 == "3" ~ "Independent",
+      Q106 %in% c("4", "5", "6", "NA") ~ "Other",
+      TRUE ~ NA_character_
+    )
   )
+
 
 ggplot(data = confession, aes(x = RECODEConfAttend)) +
   geom_bar()+
   facet_wrap(~Poli_Orientation, nrow = 2) +
-  labs(title = "Plot of Well-Being and Confession Attendance",
-       subtitle = "Faceted by Political Orientation",
+  labs(title = "Political Orientation and Confession Attendance",
        x = "Confession Attendance")
   
 ```
@@ -48,22 +55,30 @@ Sed mollis purus faucibus leo finibus, ut pharetra nibh elementum. Nulla id orci
 
 ```{r}
 # Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Species", y = "Number of Fish Encounters") +
-  theme_minimal()
-  
+ggplot(data = confession, aes(x = WHO_WELLBEING_Score)) +
+  geom_bar()+
+  facet_wrap(~Poli_Orientation, nrow = 2) +
+  labs(title = "Political Orientation and Confession Attendance",
+       x = "Confession Attendance")
 ```
 
 Mauris placerat in velit a pharetra. Nulla viverra bibendum lectus, ut lobortis nibh. Aenean malesuada, orci vitae dictum placerat, enim justo aliquet leo, ac tincidunt augue ipsum et mi. Nullam in pharetra metus, nec molestie felis. Duis varius rhoncus pulvinar. Integer semper urna sed tellus rhoncus, vel suscipit odio iaculis. Mauris iaculis neque pellentesque ex convallis venenatis. Sed ultrices euismod fermentum. Ut feugiat risus at turpis tincidunt viverra.
 
 
+
+```{r}
+
+ggplot(data = confession, aes(x = RECODEConfAttend, y = Divine_Forgiveness_Mean)) +
+  geom_point(aes(colour = factor(Poli_Orientation)), size = .5)
+
+```
+
+
+
 ```{r}
 # Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Species", y = "Number of Fish Encounters") +
-  theme_classic()
+ggplot(data = confession, aes(x = EXAMCONSCI_TOTAL, y = Divine_Forgiveness_Mean)) +
+  geom_point()
   
 ```
 
