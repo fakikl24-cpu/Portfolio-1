@@ -2,7 +2,7 @@
 title: "Portfolio 3"
 ---
 
-For this Portfolio piece, I wanted to practice webscraping. I've tried doing this with Youtube and ran into a multitude of issues. As such, I've decided to webscrape from a makeup companies' website. I want to analyze their lip products and see if they mainly sell lipgloss versus matte or satin lip products. My steps are outlined below.
+For this Portfolio piece, I wanted to practice webscraping. I've tried doing this with Youtube and various retail websites and ran into a multitude of issues. As such, I've decided to webscrape from a Scriurids Wikipedia page. After making a shiny app, I wanted to try and make some interesting interactive features. I stumbled upon this github (here: https://github.com/rstudio/DT) about interactive data tables. As such, those are included at the end of this portfolio.
 
 To begin, I have to know whether bots are allowed on this page (spoiler: they are!).
 
@@ -116,5 +116,7 @@ datatable(main_squirrels,
           options = list(pageLength = 5), 
           colnames = c("Scientific Name", "Common Name", "Geographic Range"), 
           caption = 'Searchable List of Squirrels Across the World')
-
-         
+```
+     
+     
+Now people can find whatever squirrel they want!!    

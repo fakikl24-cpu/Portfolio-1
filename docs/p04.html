@@ -11,7 +11,7 @@
 
 
 
-<title>Portfolio 4</title>
+<title>Will it Web-Scrape?</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,18 +290,114 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 4</h1>
+<h1 class="title toc-ignore">Will it Web-Scrape?</h1>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>After trying to scrape mulitple websites in Portfolio 3, I’ve decided
+to make a shiny app showing which websites can be scrapped and which
+cannot, as well as with reasons I found in my research. It was a
+frustrating process but I’m hoping that making a resource for others
+will bring some joy out of the pain. I’ve included proof of my tries
+underneath the shiny app. This will hopefully serve as a resource for
+others and for myself.</p>
+<pre class="r"><code>library(shiny)
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.6
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.1     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.1     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>ui &lt;- fluidPage(
+  theme = bslib::bs_theme(bootswatch = &quot;spacelab&quot;),
+  titlePanel(&quot;Will it Web-Scrape?&quot;),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(&quot;website&quot;, &quot;Which website do you want to scrape?&quot;, 
+                  choices = c(&quot;Youtube Playlists&quot;, &quot;Nyx Cosmetics&quot;, &quot;Elf Cosmetics&quot;, &quot;Yelp&quot;, &quot;Wikipedia&quot;))
+    ),
+    
+    mainPanel(
+      h3(&quot;Results&quot;),
+      uiOutput(&quot;results&quot;)
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+  output$results &lt;- renderUI({
+    
+    # Use switch to change content based on input$mood
+    content &lt;- switch(input$website,
+      &quot;Youtube Playlists&quot; = list(
+          h4(&quot;Will it Web-Scrape?:&quot;, icon(&quot;ban&quot;, style = &quot;color: red;&quot;)), &quot;No.&quot;,
+          h4(&quot;Why?&quot;), &quot;From my basic understanding, R cannot access private playlists because it doesn&#39;t have access to your logins and authentifications. This makes a lot of sense in hindsight but I truly thought that I only needed R to see what I was seeing.&quot;,
+          h4(&quot;Evidence&quot;), tags$code(&quot;playlist &lt;- https://www.youtube.com/playlist?list=PLRAdZUV6xZYUeqk0vdnT1pKgW3zB8x16q
+
+
+page &lt;- read_html(playlist) videotitles &lt;- page %&gt;%
+
+  html_nodes(#meta) %&gt;% 
+
+  html_node(#video-title) %&gt;%
+
+  html_text()&quot;)
+      ),
+      &quot;Nyx Cosmetics&quot; = list(
+          h4(&quot;Will it Web-Scrape?:&quot;, icon(&quot;ban&quot;, style = &quot;color: red;&quot;)), &quot;No.&quot;,
+          h4(&quot;Why?&quot;), &quot;If you remember those &#39;Are you a robot?&#39; things, then you realize really quickly why this fails. I didn&#39;t think that far though and was getting frustrated. After actually thinking, though, it&#39;s clear that Nyx didn&#39;t want bots snooping around. To get around this, I would have had to pretend to be an actual legimitate page or something. It was way above my head when I read into it. Point is, there&#39;s ways around this but these ways seem incredibly dubious and, in some cases, possibly illegal. Do not pass Go. Do not collect $200.&quot;, 
+           h4(&quot;Evidence&quot;), tags$code(&quot;library(robotstxt)
+
+paths_allowed(https://www.nyxcosmetics.com/lip/lip-gloss/)
+
+url &lt;- https://www.nyxcosmetics.com/lip/lip-gloss/
+
+page &lt;- read_html(url)
+Error in open.connection(x, rb) : cannot open the connection&quot;)
+      ),
+      &quot;Elf Cosmetics&quot; = list(
+          h4(&quot;Will it Web-Scrape?:&quot;, icon(&quot;check&quot;, style = &quot;color: green;&quot;)), &quot;Yes?&quot;,
+          h4(&quot;Why?:&quot;), &quot;It kind of worked in the sense that I could get some kind of info from it but the way their website was set up (specifically their lipstick section) made it so I couldn&#39;t actually grab the names of their lip products, the price, the reviews, etc. It&#39;s clear that you could, theoretically, scrape information off of this page, but I just couldn&#39;t figure it out without ripping my hair out.&quot;, 
+           h4(&quot;Evidence&quot;), tags$code(&quot;library(robotstxt)
+
+paths_allowed(https://www.elfcosmetics.com/lips)
+
+url &lt;- https://www.elfcosmetics.com/lips
+
+page &lt;- read_html(url)
+
+lipavailability &lt;- page %&gt;%
+  html_nodes(.css-e6g351) %&gt;%
+  html_node(.css-19x6cdk) %&gt;%
+  html_text()&quot;)
+      ),
+      &quot;Yelp&quot; = list(
+          h4(&quot;Will it Web-Scrape?:&quot;, icon(&quot;ban&quot;, style = &quot;color: red;&quot;)), &quot;No.&quot;,
+          h4(&quot;Why?&quot;), &quot;I inputed the url into the robotstxt function and it said False. I have no idea why but it&#39;s a shame cause the format would be perfect. If I had to guess, they probably don&#39;t want bots on their website messing up reviews and such and aren&#39;t able to discriminate between review bots and scraping data. Although, I&#39;m pretty sure some of the commentors are bots anyways.&quot;, 
+           h4(&quot;Evidence&quot;), tags$code( &quot;library(robotstxt)
+
+paths_allowed(https://www.yelp.com/search?find_desc=Restaurants&amp;find_loc=Winston-Salem%2C+NC&amp;dd_referrer=https%3A%2F%2Fwww.yelp.com%2F)&quot;)
+      ),
+       &quot;Wikipedia&quot; = list(
+          h4(&quot;Will it Web-Scrape?:&quot;, icon(&quot;check&quot;, style = &quot;color: green;&quot;)), &quot;Yes!&quot;,
+          h4(&quot;Why?:&quot;), &quot;Because Wikipedia doesn&#39;t hate me. That can truly be the only explanation. Jokes aside, Wikipedia is open to plenty of editing and relies on community members (shout out to Mason!) for editing the webpages. As such, the use of bots is not uncommon and unheard of, especially when it comes to editing.&quot;,
+           h4(&quot;Evidence&quot;), &quot;See Portfolio 3&quot;
+      ) 
+    ) 
+    
+    return(content)
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
 
 
 

@@ -1,16 +1,9 @@
 ---
-title: "Portfolio 4"
+title: "Will it Web-Scrape?"
 ---
 
-After trying to scrape mulitple websites in Portfolio 3, I've decided to make a shiny app showing which websites can be scrapped and which cannot, as well as with reasons I found in my research. It was a frustrating process but I'm hoping that making a resource for others will bring some joy out of the pain. 
+After trying to scrape mulitple websites in Portfolio 3, I've decided to make a shiny app showing which websites can be scrapped and which cannot, as well as with reasons I found in my research. It was a frustrating process but I'm hoping that making a resource for others will bring some joy out of the pain. I've included proof of my tries underneath the shiny app. This will hopefully serve as a resource for others and for myself. 
 
----
-title: "Playing around with Shiny"
-name: "Kryschelle Fakir"
-date: "5/04/2026"
----
-
-This portfolio aims to play around with Shiny apps. In this app, I hope to have the user select a mood and receive a list of songs, video games, youtubers, and/or things to do while they feel like this. The main goal is to make a app that gives me a list of things to do during certain moods. I often forget the things I have access to when I'm in certain moods and this may be a fun tool to use to mitigate that fatigue. 
 
 ```{r}
 
@@ -18,51 +11,80 @@ library(shiny)
 library(tidyverse)
 
 ui <- fluidPage(
+  theme = bslib::bs_theme(bootswatch = "spacelab"),
   titlePanel("Will it Web-Scrape?"),
   
   sidebarLayout(
     sidebarPanel(
-      selectInput("website", "Which Website Do you Want to Scrape?", 
-                  choices = c("Youtube Playlists", "Nyx Cosmetics", "Elf Cosmetics", "Chill", "Anxious"))
+      selectInput("website", "Which website do you want to scrape?", 
+                  choices = c("Youtube Playlists", "Nyx Cosmetics", "Elf Cosmetics", "Yelp", "Wikipedia"))
     ),
     
     mainPanel(
-      h3("Recommendations for you:"),
-      uiOutput("recommendations")
+      h3("Results"),
+      uiOutput("results")
     )
   )
 )
 
 server <- function(input, output) {
-  output$recommendations <- renderUI({
+  output$results <- renderUI({
     
     # Use switch to change content based on input$mood
-    content <- switch(input$mood,
+    content <- switch(input$website,
       "Youtube Playlists" = list(
-          h4("Will it Web-Scrape?:"), "No.",
-          h4("If no, why?"), "From my basic understanding "
+          h4("Will it Web-Scrape?:", icon("ban", style = "color: red;")), "No.",
+          h4("Why?"), "From my basic understanding, R cannot access private playlists because it doesn't have access to your logins and authentifications. This makes a lot of sense in hindsight but I truly thought that I only needed R to see what I was seeing.",
+          h4("Evidence"), tags$code("playlist <- https://www.youtube.com/playlist?list=PLRAdZUV6xZYUeqk0vdnT1pKgW3zB8x16q
+
+
+page <- read_html(playlist) videotitles <- page %>%
+
+  html_nodes(#meta) %>% 
+
+  html_node(#video-title) %>%
+
+  html_text()")
       ),
-      "NyxCosmetics" = list(
-          h4("Will it Web-Scrape?:"), "No.",
-          h4("YouTubers:"), "Girl with the Dogs, Ahzymovs"
+      "Nyx Cosmetics" = list(
+          h4("Will it Web-Scrape?:", icon("ban", style = "color: red;")), "No.",
+          h4("Why?"), "If you remember those 'Are you a robot?' things, then you realize really quickly why this fails. I didn't think that far though and was getting frustrated. After actually thinking, though, it's clear that Nyx didn't want bots snooping around. To get around this, I would have had to pretend to be an actual legimitate page or something. It was way above my head when I read into it. Point is, there's ways around this but these ways seem incredibly dubious and, in some cases, possibly illegal. Do not pass Go. Do not collect $200.", 
+           h4("Evidence"), tags$code("library(robotstxt)
+
+paths_allowed(https://www.nyxcosmetics.com/lip/lip-gloss/)
+
+url <- https://www.nyxcosmetics.com/lip/lip-gloss/
+
+page <- read_html(url)
+Error in open.connection(x, rb) : cannot open the connection")
       ),
       "Elf Cosmetics" = list(
-          h4("Will it Web-Scrape?:"), "Yes?",
-          h4("YouTubers:"), "Insym, AliensRock",
-          h4("Activities:"), "work out, Go Shopping, Call Family, Play Games, Do Makeup (for no reason)", 
-          h4("Video Games:"), "Planet Crafter, Tomodachi Life 2, Danganronpa (Ask Clementine to Play)"
+          h4("Will it Web-Scrape?:", icon("check", style = "color: green;")), "Yes?",
+          h4("Why?:"), "It kind of worked in the sense that I could get some kind of info from it but the way their website was set up (specifically their lipstick section) made it so I couldn't actually grab the names of their lip products, the price, the reviews, etc. It's clear that you could, theoretically, scrape information off of this page, but I just couldn't figure it out without ripping my hair out.", 
+           h4("Evidence"), tags$code("library(robotstxt)
+
+paths_allowed(https://www.elfcosmetics.com/lips)
+
+url <- https://www.elfcosmetics.com/lips
+
+page <- read_html(url)
+
+lipavailability <- page %>%
+  html_nodes(.css-e6g351) %>%
+  html_node(.css-19x6cdk) %>%
+  html_text()")
       ),
-      "Chill" = list(
-          h4("Music:"), "Covid Pop Revival Playlist, WheeIn, Old Vibes Playlist",
-          h4("YouTubers:"), "Insym, AliensRock, Floydson, Skottie",
-          h4("Activities:"), "Take a Nap, Read, Draw, Go to the Roof and have an Existential Crisis, Watch Youtube", 
-          h4("Video Games:"), "Planet Crafter, Risk of Rain 2"
-      ), 
-       "Anxious" = list(
-          h4("Music:"), "Old Vibes Playlist, Sade, Gospel",
-          h4("YouTubers:"), "Insym",
-          h4("Activities:"), "Take a Nap, Read, Draw, Read a Manhwa, Go to the Roof and Stargaze and have an existential crisis, Clean Room/Apartment", 
-          h4("Video Games:"), "Tomodachi Life 2, Animal Crossing"
+      "Yelp" = list(
+          h4("Will it Web-Scrape?:", icon("ban", style = "color: red;")), "No.",
+          h4("Why?"), "I inputed the url into the robotstxt function and it said False. I have no idea why but it's a shame cause the format would be perfect. If I had to guess, they probably don't want bots on their website messing up reviews and such and aren't able to discriminate between review bots and scraping data. Although, I'm pretty sure some of the commentors are bots anyways.", 
+           h4("Evidence"), tags$code( "library(robotstxt)
+
+paths_allowed(https://www.yelp.com/search?find_desc=Restaurants&find_loc=Winston-Salem%2C+NC&dd_referrer=https%3A%2F%2Fwww.yelp.com%2F)")
+      ),
+       "Wikipedia" = list(
+          h4("Will it Web-Scrape?:", icon("check", style = "color: green;")), "Yes!",
+          h4("Why?:"), "Because Wikipedia doesn't hate me. That can truly be the only explanation. Jokes aside, Wikipedia is open to plenty of editing and relies on community members (shout out to Mason!) for editing the webpages. As such, the use of bots is not uncommon and unheard of, especially when it comes to editing.",
+           h4("Evidence"), "See Portfolio 3"
       ) 
     ) 
     
@@ -73,4 +95,3 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 
 ```
-While very basic, this app shows the extent of shiny app's capabilities! Using this app, I can select my mood and see my past self's recommendations for what to do, listen to, watch, or play while I feel that mood. I can also come back to this in the future and add more moods later or update the app with more recommendations in the future. 

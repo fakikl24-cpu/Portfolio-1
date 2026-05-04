@@ -295,13 +295,123 @@ $(document).ready(function () {
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>For this portfolio piece, I wanted to test myself and see if I could
+run some of the analyses I ran for my FYP in SPSS in R. While I did not
+re-run all of my analyses, I did run a subset of them. The dataset used
+is also already mainly cleaned. I primarily wanted to practice recoding
+and mean scoring and then running correlations.</p>
+<pre class="r"><code>library(tidyverse) </code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.6
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.1     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.1     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(tidyr)
+library(haven)
+library(forcats)
+library(ggplot2)
+
+confession &lt;- read_sav(&quot;C:/Users/krysc/OneDrive/Desktop/Catholicism Study/with recode and UPDATED WHO WELLBEING SCORE scores.sav&quot;)</code></pre>
+<pre class="r"><code>library(tidyverse)
+
+confessionClean &lt;- confession %&gt;%
+  #Attention Check Filter
+  filter(Attention_Check3 == 5)
+
+confessionClean &lt;- confession %&gt;%
+  mutate(
+    # Recode measures that are on a scale of 1 to 5 (Trait Self Control &amp; Moral Tolerance)
+    across(c(Trait_Self_Control_2, Trait_Self_Control_3, Trait_Self_Control_4, 
+             Trait_Self_Control_5, Trait_Self_Control_7, Trait_Self_Control_9, 
+             Trait_Self_Control_10, Trait_Self_Control_12, Trait_Self_Control_13,
+             Moral_Tolerance_3, Moral_Tolerance_5, Moral_Tolerance_7), 
+           ~ 6 - .x, .names = &quot;{.col}R&quot;),
+    
+  )
+
+confessionClean &lt;- confession %&gt;%
+  rowwise() %&gt;% 
+  mutate(
+    TraitSelfControl_Mean = mean(c(Trait_Self_Control_1, TRAITSC_2R, TRAITSC_3R, 
+                                   TRAITSC_4R, TRAITSC_5R, Trait_Self_Control_6, 
+                                   TRAITSC_7R, Trait_Self_Control_8, TRAITSC_9R, 
+                                   TRAITSC_10R, Trait_Self_Control_11, TRAITSC_12R, 
+                                   TRAITSC_13R), na.rm = TRUE),
+    
+    Depression_Mean = mean(c(Distress_1, Distress_2, Distress_3, Distress_4, Distress_5, Distress_6, Distress_7), na.rm = TRUE),
+    
+    WHO_WELLBEING_Score = sum(c(WHO_Well_Being_Index_1, WHO_Well_Being_Index_2, WHO_Well_Being_Index_3, 
+                                 WHO_Well_Being_Index_4, WHO_Well_Being_Index_5), na.rm = TRUE) * 4
+  ) %&gt;%
+  ungroup()
+
+#Correlations
+cor_vars &lt;- confessionClean %&gt;% 
+  select(SWL_Mean, Flourishing_Mean, WHO_WELLBEING_Score, DepressionPSYCDistress_Mean)
+
+cor(cor_vars, use = &quot;pairwise.complete.obs&quot;)</code></pre>
+<pre><code>##                               SWL_Mean Flourishing_Mean WHO_WELLBEING_Score
+## SWL_Mean                     1.0000000        0.6970902           0.6505939
+## Flourishing_Mean             0.6970902        1.0000000           0.7177009
+## WHO_WELLBEING_Score          0.6505939        0.7177009           1.0000000
+## DepressionPSYCDistress_Mean -0.4466445       -0.5103831          -0.4182877
+##                             DepressionPSYCDistress_Mean
+## SWL_Mean                                     -0.4466445
+## Flourishing_Mean                             -0.5103831
+## WHO_WELLBEING_Score                          -0.4182877
+## DepressionPSYCDistress_Mean                   1.0000000</code></pre>
+<pre class="r"><code>print(cor_vars)</code></pre>
+<pre><code>## # A tibble: 442 × 4
+##    SWL_Mean Flourishing_Mean WHO_WELLBEING_Score DepressionPSYCDistress_Mean
+##       &lt;dbl&gt;            &lt;dbl&gt;               &lt;dbl&gt;                       &lt;dbl&gt;
+##  1     6                5.25                  96                        3.29
+##  2     5.33             5.88                  96                        2.86
+##  3     6                6                     92                        1.14
+##  4     3.33             5.62                  40                        1.29
+##  5     5                6.62                  84                        1.14
+##  6     5.67             6.62                  36                        2.29
+##  7     5.67             5.25                  80                        1.71
+##  8     5.67             6.5                   96                        1.14
+##  9     6                7                    120                        1   
+## 10     6.33             5.38                  88                        1.57
+## # ℹ 432 more rows</code></pre>
+<pre class="r"><code>ggplot(data = confession, aes(x = SWL_Mean, y = WHO_WELLBEING_Score)) +
+  geom_point(size = .5) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) + 
+  labs(
+    title = &quot;Satisfaction with Life and Well-Being&quot;,
+    x = &quot;SWL&quot;,
+    y = &quot;Well-Being&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p06_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
+<pre class="r"><code>ggplot(data = confession, aes(x = SWL_Mean, y = Flourishing_Mean)) +
+  geom_point(size = .5) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) + 
+  labs(
+    title = &quot;Satisfaction with Life and Flourishing&quot;,
+    x = &quot;SWL&quot;,
+    y = &quot;Flourishing&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p06_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" /></p>
+<pre class="r"><code>ggplot(data = confession, aes(x = SWL_Mean, y = DepressionPSYCDistress_Mean)) +
+  geom_point(size = .5) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) + 
+  labs(
+    title = &quot;Satisfaction with Life and Depression&quot;,
+    x = &quot;SWL&quot;,
+    y = &quot;Depression&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p06_files/figure-html/unnamed-chunk-5-1.png" alt="" width="672" /></p>
+<p>The plots above are meant to model the correlations between SWL and
+Depression, Well-Being, and Flourishing. Consistent with the correlation
+matrix, there is a positive relationship between satisfaction with life
+and well-being and flourishing and a negative relationship between SWL
+and depression.</p>
 
 
 

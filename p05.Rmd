@@ -1,5 +1,61 @@
 ---
-title: "Portfolio 5"
+title: "Journal Shiny App"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+By now, it's clear that I really enjoy making shiny apps. I find them simple but really fun and useful! For this one, I wanted to try making an app that saved entries as I wrote in them. I couldn't figure out how to generate my CV so wanted to try making a simplified version of it. As such, I attempted a shiny app where you can save entries. This would, hypothetically, function as a digital journal or notebook. I had to google how to save the data (https://daattali.com/shiny/persistent-data-storage/) and I'm not confident that it works as intended and it's not super pretty but it was worth a shot. 
+
+```{r}
+library(shiny)
+library(bslib)
+
+ui <- fluidPage(
+  theme = bs_theme(bootswatch = "spacelab"),
+  titlePanel("Notebook"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      textInput("text", "Enter text", value = ""),
+      actionButton("submit", "Save Entry"), 
+      hr(),
+      h5("Current Input:"),
+      textOutput("display_text") 
+    ),
+    
+    mainPanel(
+      h3("Saved Journal History"),
+      verbatimTextOutput("file_content") 
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  
+  output$display_text <- renderText({
+    input$text
+  })
+  
+  observeEvent(input$submit, {
+    if(input$text != "") {
+      write(paste(Sys.time(), "-", input$text), 
+            file = "notebook.txt", 
+            append = TRUE)
+      
+      updateTextInput(session, "text", value = "")
+    }
+  })
+  
+  output$file_content <- renderText({
+    input$submit 
+    
+    if (file.exists("notebook.txt")) {
+      paste(readLines("notebook.txt"), collapse = "\n")
+    } else {
+      "No entries yet."
+    }
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+
+```

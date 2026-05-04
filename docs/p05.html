@@ -11,7 +11,7 @@
 
 
 
-<title>Portfolio 5</title>
+<title>Journal Shiny App</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,18 +290,78 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 5</h1>
+<h1 class="title toc-ignore">Journal Shiny App</h1>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>By now, it’s clear that I really enjoy making shiny apps. I find them
+simple but really fun and useful! For this one, I wanted to try making
+an app that saved entries as I wrote in them. I couldn’t figure out how
+to generate my CV so wanted to try making a simplified version of it. As
+such, I attempted a shiny app where you can save entries. This would,
+hypothetically, function as a digital journal or notebook. I had to
+google how to save the data (<a
+href="https://daattali.com/shiny/persistent-data-storage/"
+class="uri">https://daattali.com/shiny/persistent-data-storage/</a>) and
+I’m not confident that it works as intended and it’s not super pretty
+but it was worth a shot.</p>
+<pre class="r"><code>library(shiny)
+library(bslib)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;bslib&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:utils&#39;:
+## 
+##     page</code></pre>
+<pre class="r"><code>ui &lt;- fluidPage(
+  theme = bs_theme(bootswatch = &quot;spacelab&quot;),
+  titlePanel(&quot;Notebook&quot;),
+  
+  sidebarLayout(
+    sidebarPanel(
+      textInput(&quot;text&quot;, &quot;Enter text&quot;, value = &quot;&quot;),
+      actionButton(&quot;submit&quot;, &quot;Save Entry&quot;), 
+      hr(),
+      h5(&quot;Current Input:&quot;),
+      textOutput(&quot;display_text&quot;) 
+    ),
+    
+    mainPanel(
+      h3(&quot;Saved Journal History&quot;),
+      verbatimTextOutput(&quot;file_content&quot;) 
+    )
+  )
+)
+
+server &lt;- function(input, output, session) {
+  
+  output$display_text &lt;- renderText({
+    input$text
+  })
+  
+  observeEvent(input$submit, {
+    if(input$text != &quot;&quot;) {
+      write(paste(Sys.time(), &quot;-&quot;, input$text), 
+            file = &quot;notebook.txt&quot;, 
+            append = TRUE)
+      
+      updateTextInput(session, &quot;text&quot;, value = &quot;&quot;)
+    }
+  })
+  
+  output$file_content &lt;- renderText({
+    input$submit 
+    
+    if (file.exists(&quot;notebook.txt&quot;)) {
+      paste(readLines(&quot;notebook.txt&quot;), collapse = &quot;\n&quot;)
+    } else {
+      &quot;No entries yet.&quot;
+    }
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
 
 
 

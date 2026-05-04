@@ -2,4 +2,98 @@
 title: "Portfolio 6"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+For this portfolio piece, I wanted to test myself and see if I could run some of the analyses I ran for my FYP in SPSS in R. While I did not re-run all of my analyses, I did run a subset of them. The dataset used is also already mainly cleaned. I primarily wanted to practice recoding and mean scoring and then running correlations. 
+
+```{r}
+library(tidyverse) 
+library(tidyr)
+library(haven)
+library(forcats)
+library(ggplot2)
+
+confession <- read_sav("C:/Users/krysc/OneDrive/Desktop/Catholicism Study/with recode and UPDATED WHO WELLBEING SCORE scores.sav")
+```
+
+```{r}
+
+library(tidyverse)
+
+confessionClean <- confession %>%
+  #Attention Check Filter
+  filter(Attention_Check3 == 5)
+
+confessionClean <- confession %>%
+  mutate(
+    # Recode measures that are on a scale of 1 to 5 (Trait Self Control & Moral Tolerance)
+    across(c(Trait_Self_Control_2, Trait_Self_Control_3, Trait_Self_Control_4, 
+             Trait_Self_Control_5, Trait_Self_Control_7, Trait_Self_Control_9, 
+             Trait_Self_Control_10, Trait_Self_Control_12, Trait_Self_Control_13,
+             Moral_Tolerance_3, Moral_Tolerance_5, Moral_Tolerance_7), 
+           ~ 6 - .x, .names = "{.col}R"),
+    
+  )
+
+confessionClean <- confession %>%
+  rowwise() %>% 
+  mutate(
+    TraitSelfControl_Mean = mean(c(Trait_Self_Control_1, TRAITSC_2R, TRAITSC_3R, 
+                                   TRAITSC_4R, TRAITSC_5R, Trait_Self_Control_6, 
+                                   TRAITSC_7R, Trait_Self_Control_8, TRAITSC_9R, 
+                                   TRAITSC_10R, Trait_Self_Control_11, TRAITSC_12R, 
+                                   TRAITSC_13R), na.rm = TRUE),
+    
+    Depression_Mean = mean(c(Distress_1, Distress_2, Distress_3, Distress_4, Distress_5, Distress_6, Distress_7), na.rm = TRUE),
+    
+    WHO_WELLBEING_Score = sum(c(WHO_Well_Being_Index_1, WHO_Well_Being_Index_2, WHO_Well_Being_Index_3, 
+                                 WHO_Well_Being_Index_4, WHO_Well_Being_Index_5), na.rm = TRUE) * 4
+  ) %>%
+  ungroup()
+
+#Correlations
+cor_vars <- confessionClean %>% 
+  select(SWL_Mean, Flourishing_Mean, WHO_WELLBEING_Score, DepressionPSYCDistress_Mean)
+
+cor(cor_vars, use = "pairwise.complete.obs")
+
+print(cor_vars)
+
+```
+
+```{r}
+
+ggplot(data = confession, aes(x = SWL_Mean, y = WHO_WELLBEING_Score)) +
+  geom_point(size = .5) +
+  geom_smooth(method = "lm", se = FALSE) + 
+  labs(
+    title = "Satisfaction with Life and Well-Being",
+    x = "SWL",
+    y = "Well-Being")
+
+```
+
+```{r}
+
+ggplot(data = confession, aes(x = SWL_Mean, y = Flourishing_Mean)) +
+  geom_point(size = .5) +
+  geom_smooth(method = "lm", se = FALSE) + 
+  labs(
+    title = "Satisfaction with Life and Flourishing",
+    x = "SWL",
+    y = "Flourishing")
+
+
+```
+
+```{r}
+
+ggplot(data = confession, aes(x = SWL_Mean, y = DepressionPSYCDistress_Mean)) +
+  geom_point(size = .5) +
+  geom_smooth(method = "lm", se = FALSE) + 
+  labs(
+    title = "Satisfaction with Life and Depression",
+    x = "SWL",
+    y = "Depression")
+
+```
+
+The plots above are meant to model the correlations between SWL and Depression, Well-Being, and Flourishing. Consistent with the correlation matrix, there is a positive relationship between satisfaction with life and well-being and flourishing and a negative relationship between SWL and depression. 
