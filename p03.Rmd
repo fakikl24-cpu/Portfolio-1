@@ -2,4 +2,119 @@
 title: "Portfolio 3"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+For this Portfolio piece, I wanted to practice webscraping. I've tried doing this with Youtube and ran into a multitude of issues. As such, I've decided to webscrape from a makeup companies' website. I want to analyze their lip products and see if they mainly sell lipgloss versus matte or satin lip products. My steps are outlined below.
+
+To begin, I have to know whether bots are allowed on this page (spoiler: they are!).
+
+
+```{r}
+
+library(robotstxt)
+
+paths_allowed("https://en.wikipedia.org/wiki/List_of_sciurids")
+
+```
+In the section below, I read the data in from Wikipedia. I used Google Gemini to help where I got stuck, such as on line 37 where I was having trouble reading in the Scientific Names, since I couldn't find the solution from lab where we scrapped information from the Edinburgh museum. In particular, I was having an issue where I was reading the Scientific names in as "Scientific name hide X subspecies." To remedy this, Gemini suggested this code to help R find only the first two words of the sentence. So, instead of "Squirrel Genusname hide 5 species" we get "Squirrel Genusname." I was confused as to why we wouldn't just split the text but realized that doing it this way was a form of pattern recognition and, so, I kept the change since it solved the issue I was having. 
+
+```{r}
+
+library(tidyverse)
+library(rvest)
+
+url <- "https://en.wikipedia.org/wiki/List_of_sciurids"
+page <- read_html(url)
+
+tables <- page %>%
+  html_elements("table.wikitable") %>%
+  html_table()
+
+sciurid_master <- tables %>%
+  keep(~ "Common name" %in% colnames(.x)) %>%
+  bind_rows()
+
+sciurid_final <- sciurid_master %>%
+  mutate(
+    Scientific_Name = str_extract(`Scientific name and subspecies`, "^[A-Z][a-z]+ [a-z]+"),
+    
+    Subspecies_Info = str_remove_all(`Scientific name and subspecies`, "hide")
+  ) %>%
+  select(Scientific_Name, `Common name`, Range, `Size and ecology`, everything())
+
+head(sciurid_final)
+
+```
+
+Next, I wanted to actually plot the regions all of the squirrels were from. To do this, I used the forcats functions to reorder the bars. 
+
+```{r}
+
+sciurid_plot_data <- sciurid_final %>%
+  # I wanted to filter out any rows where range might be missing
+  filter(!is.na(Range)) %>%
+  count(Range) %>%
+  # I only show the top 15 regions so the graph isn't too crowded
+  slice_max(n, n = 15)
+
+ggplot(sciurid_plot_data, aes(y = fct_reorder(Range, n), x = n)) +
+  geom_col(fill = "orange") +
+  # Add labels to the bars for clarity
+  geom_text(aes(label = n), size = 3.5) +
+  labs(
+    title = "Top 15 Regions by Sciurid Species Count",
+    subtitle = "Based on Wikipedia List of Sciurids",
+    x = "Number of Species",
+    y = "Geographic Range"
+  ) +
+  theme_minimal()
+
+```
+
+From the data, we can see that a lot of Scurid Species can be found in Southeast Asia. However, coming up quickly behind is Western U.S. Since these are where the majority of Scurid species can be found, I'd like to know exactly which squirrels live in this area. To do this, I'll select cases with Southeast Asia and Western U.S. as cases. 
+
+```{r}
+priority_squirrels <- sciurid_final %>%
+  filter(
+    str_detect(Range, "Southeastern Asia") | 
+    str_detect(Range, "Western United States")
+  ) %>%
+  select(Scientific_Name, `Common name`, Range)
+
+head(priority_squirrels)
+
+nrow(priority_squirrels)
+
+```
+
+Now that I've split my data apart, I wanted to make a tool so people could find the specific squirrels in this region. 
+
+```{r}
+
+library(DT)
+
+datatable(priority_squirrels, 
+          options = list(pageLength = 5),
+          colnames = c("Scientific Name", "Common Name", "Geographic Range"),
+          caption = 'Searchable List of Southeast Asian and Western U.S. Squirrels')
+
+```
+
+Now I'll make an overall table for the entire dataset scrapped from the Wikipedia page. But to do that, I need to select only the Scientific Name, Common Name, and Geographic Range. 
+
+```{r}
+
+main_squirrels <- sciurid_final %>%
+  select(Scientific_Name, `Common name`, Range)
+
+head(main_squirrels)
+
+
+```
+
+```{r}
+
+datatable(main_squirrels, 
+          options = list(pageLength = 5), 
+          colnames = c("Scientific Name", "Common Name", "Geographic Range"), 
+          caption = 'Searchable List of Squirrels Across the World')
+
+         

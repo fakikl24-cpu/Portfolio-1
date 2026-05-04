@@ -2,4 +2,75 @@
 title: "Portfolio 4"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+After trying to scrape mulitple websites in Portfolio 3, I've decided to make a shiny app showing which websites can be scrapped and which cannot, as well as with reasons I found in my research. It was a frustrating process but I'm hoping that making a resource for others will bring some joy out of the pain. 
+
+---
+title: "Playing around with Shiny"
+name: "Kryschelle Fakir"
+date: "5/04/2026"
+---
+
+This portfolio aims to play around with Shiny apps. In this app, I hope to have the user select a mood and receive a list of songs, video games, youtubers, and/or things to do while they feel like this. The main goal is to make a app that gives me a list of things to do during certain moods. I often forget the things I have access to when I'm in certain moods and this may be a fun tool to use to mitigate that fatigue. 
+
+```{r}
+
+library(shiny)
+library(tidyverse)
+
+ui <- fluidPage(
+  titlePanel("Will it Web-Scrape?"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("website", "Which Website Do you Want to Scrape?", 
+                  choices = c("Youtube Playlists", "Nyx Cosmetics", "Elf Cosmetics", "Chill", "Anxious"))
+    ),
+    
+    mainPanel(
+      h3("Recommendations for you:"),
+      uiOutput("recommendations")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$recommendations <- renderUI({
+    
+    # Use switch to change content based on input$mood
+    content <- switch(input$mood,
+      "Youtube Playlists" = list(
+          h4("Will it Web-Scrape?:"), "No.",
+          h4("If no, why?"), "From my basic understanding "
+      ),
+      "NyxCosmetics" = list(
+          h4("Will it Web-Scrape?:"), "No.",
+          h4("YouTubers:"), "Girl with the Dogs, Ahzymovs"
+      ),
+      "Elf Cosmetics" = list(
+          h4("Will it Web-Scrape?:"), "Yes?",
+          h4("YouTubers:"), "Insym, AliensRock",
+          h4("Activities:"), "work out, Go Shopping, Call Family, Play Games, Do Makeup (for no reason)", 
+          h4("Video Games:"), "Planet Crafter, Tomodachi Life 2, Danganronpa (Ask Clementine to Play)"
+      ),
+      "Chill" = list(
+          h4("Music:"), "Covid Pop Revival Playlist, WheeIn, Old Vibes Playlist",
+          h4("YouTubers:"), "Insym, AliensRock, Floydson, Skottie",
+          h4("Activities:"), "Take a Nap, Read, Draw, Go to the Roof and have an Existential Crisis, Watch Youtube", 
+          h4("Video Games:"), "Planet Crafter, Risk of Rain 2"
+      ), 
+       "Anxious" = list(
+          h4("Music:"), "Old Vibes Playlist, Sade, Gospel",
+          h4("YouTubers:"), "Insym",
+          h4("Activities:"), "Take a Nap, Read, Draw, Read a Manhwa, Go to the Roof and Stargaze and have an existential crisis, Clean Room/Apartment", 
+          h4("Video Games:"), "Tomodachi Life 2, Animal Crossing"
+      ) 
+    ) 
+    
+    return(content)
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+While very basic, this app shows the extent of shiny app's capabilities! Using this app, I can select my mood and see my past self's recommendations for what to do, listen to, watch, or play while I feel that mood. I can also come back to this in the future and add more moods later or update the app with more recommendations in the future. 

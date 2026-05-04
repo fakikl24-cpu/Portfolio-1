@@ -11,7 +11,7 @@
 
 
 
-<title>Well-being by Demographics</title>
+<title>Outcomes by Political Orientation</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,76 +290,139 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Well-being by Demographics</h1>
+<h1 class="title toc-ignore">Outcomes by Political Orientation</h1>
+<h4 class="date">5/04/2026</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
 <pre class="r"><code>library(tidyverse) 
 library(tidyr)
 library(haven)
+library(forcats)
+library(ggplot2)
 
-confession &lt;- read_sav(&quot;C:/Users/krysc/OneDrive/Desktop/Catholicism Study/with recode and UPDATED WHO WELLBEING SCORE scores.sav&quot;)
-View(confession)</code></pre>
-<p>For this project, I will be examining the relationship between
-confession attendance and different demographics variables such as
-political orientation, yearly income, gender, education, and age. To
-begin, I have read in my data from SPSS using the code from the “Import
-Dataset” tab.</p>
-<p>For this project, I will run bar plots showing the confession
-attendance of different demographic variables. To begin, I will examine
-the frequency of confession attendance for different political
-orientations</p>
+confession &lt;- read_sav(&quot;C:/Users/krysc/OneDrive/Desktop/Catholicism Study/with recode and UPDATED WHO WELLBEING SCORE scores.sav&quot;)</code></pre>
+<p>MAIN QUESTION: WHAT ARE THE DIFFERENCES BETWEEN POLITICAL GROUPS IN A
+CATHOLIC SAMPLE ON VARIOUS OUTCOMES?</p>
+<p>For this project, I will be examining the differences in well-being,
+confession attendance, and divine forgiveness across political
+orientation. I’m curious if well-being and divine forgivness differ
+across parties. I’m also interested in whether the relationship between
+attending confession and well-being and divine forgivness differs across
+political groups. To begin, I have read in my data from SPSS using the
+code from the “Import Dataset” tab and ran the packages I’ll need for my
+visualizations.</p>
+<pre class="r"><code>select(
+  confession, 
+  RECODEConfAttend,
+  Q106
+)</code></pre>
+<pre><code>## # A tibble: 442 × 2
+##    RECODEConfAttend Q106           
+##               &lt;dbl&gt; &lt;dbl+lbl&gt;      
+##  1                6 2 [Republican] 
+##  2                6 2 [Republican] 
+##  3                6 1 [Democrat]   
+##  4                3 1 [Democrat]   
+##  5                2 1 [Democrat]   
+##  6                6 2 [Republican] 
+##  7                5 3 [Independent]
+##  8                4 3 [Independent]
+##  9                3 2 [Republican] 
+## 10                5 1 [Democrat]   
+## # ℹ 432 more rows</code></pre>
+<pre class="r"><code>confession &lt;- confession %&gt;%
+  mutate(
+    Q106 = as.character(Q106),
+    Poli_Orientation = case_when(
+      Q106 == &quot;1&quot; ~ &quot;Democrat&quot;,
+      Q106 == &quot;2&quot; ~ &quot;Republican&quot;, 
+      Q106 == &quot;3&quot; ~ &quot;Independent&quot;,
+      Q106 %in% c(&quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;NA&quot;) ~ &quot;Other&quot;,
+      TRUE ~ NA_character_
+    )
+  )</code></pre>
 <pre class="r"><code>ggplot(data = confession, aes(x = RECODEConfAttend)) +
   geom_bar()+
-  facet_wrap(~Q106, nrow = 2) +
-  labs(title = &quot;Plot of Well-Being and Confession Attendance&quot;,
-       subtitle = &quot;Faceted by Political Orientation&quot;,
+  facet_wrap(~Poli_Orientation, nrow = 2) +
+  labs(title = &quot;Political Orientation and Confession Attendance&quot;,
        x = &quot;Confession Attendance&quot;)</code></pre>
 <pre><code>## Warning: Removed 1 row containing non-finite outside the scale range
 ## (`stat_count()`).</code></pre>
-<p><img src="p01_files/figure-html/unnamed-chunk-1-1.png" alt="" width="672" /></p>
-<p>Sed mollis purus faucibus leo finibus, ut pharetra nibh elementum.
-Nulla id orci lorem. Mauris sollicitudin mi eget tellus vehicula, ut
-convallis lorem mollis. In blandit nulla diam, a malesuada sem volutpat
-interdum. Ut elementum elit at velit maximus, ac tempor odio porttitor.
-Suspendisse lobortis sollicitudin tortor, ut pharetra libero luctus a.
-Sed hendrerit faucibus metus. Sed rutrum purus vel pellentesque
-euismod.</p>
-<pre class="r"><code># Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = &quot;identity&quot;) +
-  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;) +
-  theme_minimal()</code></pre>
 <p><img src="p01_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" /></p>
-<p>Mauris placerat in velit a pharetra. Nulla viverra bibendum lectus,
-ut lobortis nibh. Aenean malesuada, orci vitae dictum placerat, enim
-justo aliquet leo, ac tincidunt augue ipsum et mi. Nullam in pharetra
-metus, nec molestie felis. Duis varius rhoncus pulvinar. Integer semper
-urna sed tellus rhoncus, vel suscipit odio iaculis. Mauris iaculis neque
-pellentesque ex convallis venenatis. Sed ultrices euismod fermentum. Ut
-feugiat risus at turpis tincidunt viverra.</p>
-<pre class="r"><code># Create a barplot of the number of fish encounters by species
-ggplot(data = fish_encounters, aes(x = station, y = seen)) +
-  geom_bar(stat = &quot;identity&quot;) +
-  labs(x = &quot;Species&quot;, y = &quot;Number of Fish Encounters&quot;) +
-  theme_classic()</code></pre>
+<p>Here, I made a bar graph of people’s confession attendance and facet
+wrapped that to show the difference across political orientations. From
+the graph, it’s clear that republicans attend confession more often than
+democrats and independents.</p>
+<pre class="r"><code>ggplot(data = confession, aes(x = WHO_WELLBEING_Score)) +
+  geom_bar()+
+  facet_wrap(~Poli_Orientation, nrow = 2) +
+  labs(title = &quot;WHO Well-Being by Political Orientation&quot;, 
+       x = &quot;WHO Well-Being&quot;)</code></pre>
 <p><img src="p01_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
-<p>Donec sagittis suscipit orci in ultrices. Vivamus iaculis eleifend
-est et dictum. Fusce non urna at lacus dapibus tincidunt ac sed nibh.
-Donec luctus lectus elit, ac ultrices tortor mollis sit amet. Nulla
-finibus lacinia arcu. Proin sollicitudin non odio et pulvinar. Maecenas
-finibus faucibus finibus. Ut elementum metus velit, a sodales sapien
-commodo et. Vivamus pulvinar, sapien et porta cursus, elit est luctus
-nisi, eget fringilla odio diam et enim. Sed sodales suscipit bibendum.
-Morbi ut metus semper, laoreet felis sodales, consequat dolor.</p>
+<p>Here, I made a bar graph examining people’s overall well-being scores
+on the World Health Organization well-being scale. Scores range from 0
+to 120, where 0 is the worst imaginable well-being and 120 is the best
+imaginable well-being. Then, I wanted to know if there were differences
+in well-being between political orientations. Across all political
+orientations, it’s clear that most people are experiencing high levels
+of well-being. However, based on the visualizations alone, it’s clear
+that republicans reported higher well-being than democrats.</p>
+<pre class="r"><code>ggplot(data = confession, aes(x = RECODEConfAttend, y = WHO_WELLBEING_Score, colour = factor(Poli_Orientation))) +
+  geom_point(size = .5) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) + 
+  labs(
+    title = &quot;Confession Attendance and Well-Being by Political Orientation&quot;,
+    x = &quot;Confession Attendance&quot;,
+    y = &quot;Well-Being&quot;,
+    colour = &quot;Political Orientation&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 1 row containing non-finite outside the scale range
+## (`stat_smooth()`).</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="p01_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" />
+Here I examine the relationship between attending confession and
+well-being and examine whether the relationship differs across political
+orientation. From the visualization, it’s clear that the relationship
+between attending confession and well-being is stronger for democrats
+compared to republicans and independents.</p>
+<pre class="r"><code>ggplot(data = confession, aes(x = Divine_Forgiveness_Mean )) +
+  geom_bar()+
+  facet_wrap(~Poli_Orientation, nrow = 2) +
+  labs(title = &quot;Divine Forgiveness by Political Orientation&quot;, 
+         x = &quot;Divine Forgiveness&quot;)</code></pre>
+<p><img src="p01_files/figure-html/unnamed-chunk-5-1.png" alt="" width="672" />
+In this bar graph, I examine the distribution of participant’s feelings
+of forgiveness from God and facet those results by political orientation
+to gather whether one party experiences greater feelings of divine
+forgiveness compared to another. Looking at the visualization, it is
+clear that more republican participants reported higher levels of divine
+forgiveness compared to democrats and independents.</p>
+<pre class="r"><code>ggplot(data = confession, aes(x = RECODEConfAttend, y = Divine_Forgiveness_Mean, colour = factor(Poli_Orientation))) +
+  geom_point(size = .5) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) + 
+  labs(
+    title = &quot;Confession Attendance and Divine Forgiveness by Political Orientation&quot;,
+    x = &quot;Confession Attendance&quot;,
+    y = &quot;Divine Forgiveness&quot;,
+    colour = &quot;Political Orientation&quot; 
+  )</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 1 row containing non-finite outside the scale range
+## (`stat_smooth()`).</code></pre>
+<pre><code>## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_point()`).</code></pre>
+<p><img src="p01_files/figure-html/unnamed-chunk-6-1.png" alt="" width="672" /></p>
+<p>This graph is looking at the relationship between attending
+confession and feelings of being forgiven by God. In my FYP, this
+relationship was statistically significant. Here, I’m interested
+visualizing the difference in this relationship across political groups.
+The relationship appears strongest for republicans but the overall trend
+for the three major political parties are the same. The ‘other’ group
+include people who did not respond to the question or answered other.
+There is clearly a ceiling effect in this relationship here.</p>
 
 
 

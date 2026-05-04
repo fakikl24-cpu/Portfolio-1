@@ -1,5 +1,74 @@
 ---
-title: "Portfolio 2"
+title: "Playing around with Shiny"
+name: "Kryschelle Fakir"
+date: "5/04/2026"
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+This portfolio aims to play around with Shiny apps. In this app, I hope to have the user select a mood and receive a list of songs, video games, youtubers, and/or things to do while they feel like this. The main goal is to make a app that gives me a list of things to do during certain moods. I often forget the things I have access to when I'm in certain moods and this may be a fun tool to use to mitigate that fatigue. 
+
+```{r}
+
+library(shiny)
+library(tidyverse)
+
+ui <- fluidPage(
+  titlePanel("Mood-Based Recommendations"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("mood", "How are you feeling?", 
+                  choices = c("Bed-Rotting", "Irritated", "Hyper", "Chill", "Anxious"))
+    ),
+    
+    mainPanel(
+      h3("Recommendations for you:"),
+      uiOutput("recommendations")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$recommendations <- renderUI({
+    
+    # Use switch to change content based on input$mood
+    content <- switch(input$mood,
+      "Bed-Rotting" = list(
+          h4("Music:"), "Isaac Dubar and Melanie Martinez",
+          h4("YouTubers:"), "Smosh and Josh Johnson",
+          h4("Activities:"), "Make the bed, Shower, Put on a podcast and do something mindless, Go downstairs to workout, Call Family",
+          h4("Video Games:"), "Planet Crafter, Water Park Simulator, Tomodachi Life 2, Animal Crossing, Project Sekai"
+      ),
+      "Irritated" = list(
+          h4("Music:"), "SZA, KOD - JCole, Marina, Leak it Playlist, WaterColor - Wheein",
+          h4("YouTubers:"), "Girl with the Dogs, Ahzymovs",
+          h4("Activities:"), "Work out, Go on a Walk, Draw",
+          h4("Video Games:"), "HellDivers, Marvel Rivals, Risk of Rain 2"
+      ),
+      "Hyper" = list(
+          h4("Music:"), "Blue and Orange Playlist, Hearts2Hearts, Jae Stephens, Pinky Up, Ice Cream EP - Yuna, Troye Sivan",
+          h4("YouTubers:"), "Insym, AliensRock",
+          h4("Activities:"), "work out, Go Shopping, Call Family, Play Games, Do Makeup (for no reason)", 
+          h4("Video Games:"), "Planet Crafter, Tomodachi Life 2, Danganronpa (Ask Clementine to Play)"
+      ),
+      "Chill" = list(
+          h4("Music:"), "Covid Pop Revival Playlist, WheeIn, Old Vibes Playlist",
+          h4("YouTubers:"), "Insym, AliensRock, Floydson, Skottie",
+          h4("Activities:"), "Take a Nap, Read, Draw, Go to the Roof and have an Existential Crisis, Watch Youtube", 
+          h4("Video Games:"), "Planet Crafter, Risk of Rain 2"
+      ), 
+       "Anxious" = list(
+          h4("Music:"), "Old Vibes Playlist, Sade, Gospel",
+          h4("YouTubers:"), "Insym",
+          h4("Activities:"), "Take a Nap, Read, Draw, Read a Manhwa, Go to the Roof and Stargaze and have an existential crisis, Clean Room/Apartment", 
+          h4("Video Games:"), "Tomodachi Life 2, Animal Crossing"
+      ) 
+    ) 
+    
+    return(content)
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+While very basic, this app shows the extent of shiny app's capabilities! Using this app, I can select my mood and see my past self's recommendations for what to do, listen to, watch, or play while I feel that mood. I can also come back to this in the future and add more moods later or update the app with more recommendations in the future. 

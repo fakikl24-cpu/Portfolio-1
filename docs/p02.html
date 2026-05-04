@@ -11,7 +11,7 @@
 
 
 
-<title>Portfolio 2</title>
+<title>Playing around with Shiny</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,18 +290,96 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 2</h1>
+<h1 class="title toc-ignore">Playing around with Shiny</h1>
+<h4 class="date">5/04/2026</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>This portfolio aims to play around with Shiny apps. In this app, I
+hope to have the user select a mood and receive a list of songs, video
+games, youtubers, and/or things to do while they feel like this. The
+main goal is to make a app that gives me a list of things to do during
+certain moods. I often forget the things I have access to when I’m in
+certain moods and this may be a fun tool to use to mitigate that
+fatigue.</p>
+<pre class="r"><code>library(shiny)
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.6
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.1     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.1     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>ui &lt;- fluidPage(
+  titlePanel(&quot;Mood-Based Recommendations&quot;),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(&quot;mood&quot;, &quot;How are you feeling?&quot;, 
+                  choices = c(&quot;Bed-Rotting&quot;, &quot;Irritated&quot;, &quot;Hyper&quot;, &quot;Chill&quot;, &quot;Anxious&quot;))
+    ),
+    
+    mainPanel(
+      h3(&quot;Recommendations for you:&quot;),
+      uiOutput(&quot;recommendations&quot;)
+    )
+  )
+)
+
+server &lt;- function(input, output) {
+  output$recommendations &lt;- renderUI({
+    
+    # Use switch to change content based on input$mood
+    content &lt;- switch(input$mood,
+      &quot;Bed-Rotting&quot; = list(
+          h4(&quot;Music:&quot;), &quot;Isaac Dubar and Melanie Martinez&quot;,
+          h4(&quot;YouTubers:&quot;), &quot;Smosh and Josh Johnson&quot;,
+          h4(&quot;Activities:&quot;), &quot;Make the bed, Shower, Put on a podcast and do something mindless, Go downstairs to workout, Call Family&quot;,
+          h4(&quot;Video Games:&quot;), &quot;Planet Crafter, Water Park Simulator, Tomodachi Life 2, Animal Crossing, Project Sekai&quot;
+      ),
+      &quot;Irritated&quot; = list(
+          h4(&quot;Music:&quot;), &quot;SZA, KOD - JCole, Marina, Leak it Playlist, WaterColor - Wheein&quot;,
+          h4(&quot;YouTubers:&quot;), &quot;Girl with the Dogs, Ahzymovs&quot;,
+          h4(&quot;Activities:&quot;), &quot;Work out, Go on a Walk, Draw&quot;,
+          h4(&quot;Video Games:&quot;), &quot;HellDivers, Marvel Rivals, Risk of Rain 2&quot;
+      ),
+      &quot;Hyper&quot; = list(
+          h4(&quot;Music:&quot;), &quot;Blue and Orange Playlist, Hearts2Hearts, Jae Stephens, Pinky Up, Ice Cream EP - Yuna, Troye Sivan&quot;,
+          h4(&quot;YouTubers:&quot;), &quot;Insym, AliensRock&quot;,
+          h4(&quot;Activities:&quot;), &quot;work out, Go Shopping, Call Family, Play Games, Do Makeup (for no reason)&quot;, 
+          h4(&quot;Video Games:&quot;), &quot;Planet Crafter, Tomodachi Life 2, Danganronpa (Ask Clementine to Play)&quot;
+      ),
+      &quot;Chill&quot; = list(
+          h4(&quot;Music:&quot;), &quot;Covid Pop Revival Playlist, WheeIn, Old Vibes Playlist&quot;,
+          h4(&quot;YouTubers:&quot;), &quot;Insym, AliensRock, Floydson, Skottie&quot;,
+          h4(&quot;Activities:&quot;), &quot;Take a Nap, Read, Draw, Go to the Roof and have an Existential Crisis, Watch Youtube&quot;, 
+          h4(&quot;Video Games:&quot;), &quot;Planet Crafter, Risk of Rain 2&quot;
+      ), 
+       &quot;Anxious&quot; = list(
+          h4(&quot;Music:&quot;), &quot;Old Vibes Playlist, Sade, Gospel&quot;,
+          h4(&quot;YouTubers:&quot;), &quot;Insym&quot;,
+          h4(&quot;Activities:&quot;), &quot;Take a Nap, Read, Draw, Read a Manhwa, Go to the Roof and Stargaze and have an existential crisis, Clean Room/Apartment&quot;, 
+          h4(&quot;Video Games:&quot;), &quot;Tomodachi Life 2, Animal Crossing&quot;
+      ) 
+    ) 
+    
+    return(content)
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+<p>While very basic, this app shows the extent of shiny app’s
+capabilities! Using this app, I can select my mood and see my past
+self’s recommendations for what to do, listen to, watch, or play while I
+feel that mood. I can also come back to this in the future and add more
+moods later or update the app with more recommendations in the
+future.</p>
 
 
 

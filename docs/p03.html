@@ -32,6 +32,15 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.34.0/datatables.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -295,13 +304,157 @@ $(document).ready(function () {
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>For this Portfolio piece, I wanted to practice webscraping. I’ve
+tried doing this with Youtube and ran into a multitude of issues. As
+such, I’ve decided to webscrape from a makeup companies’ website. I want
+to analyze their lip products and see if they mainly sell lipgloss
+versus matte or satin lip products. My steps are outlined below.</p>
+<p>To begin, I have to know whether bots are allowed on this page
+(spoiler: they are!).</p>
+<pre class="r"><code>library(robotstxt)
+
+paths_allowed(&quot;https://en.wikipedia.org/wiki/List_of_sciurids&quot;)</code></pre>
+<pre><code>##  en.wikipedia.org</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>In the section below, I read the data in from Wikipedia. I used
+Google Gemini to help where I got stuck, such as on line 37 where I was
+having trouble reading in the Scientific Names, since I couldn’t find
+the solution from lab where we scrapped information from the Edinburgh
+museum. In particular, I was having an issue where I was reading the
+Scientific names in as “Scientific name hide X subspecies.” To remedy
+this, Gemini suggested this code to help R find only the first two words
+of the sentence. So, instead of “Squirrel Genusname hide 5 species” we
+get “Squirrel Genusname.” I was confused as to why we wouldn’t just
+split the text but realized that doing it this way was a form of pattern
+recognition and, so, I kept the change since it solved the issue I was
+having.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.6
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.1     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.1     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(rvest)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;rvest&#39;
+## 
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding</code></pre>
+<pre class="r"><code>url &lt;- &quot;https://en.wikipedia.org/wiki/List_of_sciurids&quot;
+page &lt;- read_html(url)
+
+tables &lt;- page %&gt;%
+  html_elements(&quot;table.wikitable&quot;) %&gt;%
+  html_table()
+
+sciurid_master &lt;- tables %&gt;%
+  keep(~ &quot;Common name&quot; %in% colnames(.x)) %&gt;%
+  bind_rows()
+
+sciurid_final &lt;- sciurid_master %&gt;%
+  mutate(
+    Scientific_Name = str_extract(`Scientific name and subspecies`, &quot;^[A-Z][a-z]+ [a-z]+&quot;),
+    
+    Subspecies_Info = str_remove_all(`Scientific name and subspecies`, &quot;hide&quot;)
+  ) %&gt;%
+  select(Scientific_Name, `Common name`, Range, `Size and ecology`, everything())
+
+head(sciurid_final)</code></pre>
+<pre><code>## # A tibble: 6 × 7
+##   Scientific_Name `Common name`  Range `Size and ecology` Scientific name and …¹
+##   &lt;chr&gt;           &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;              &lt;chr&gt;                 
+## 1 &lt;NA&gt;            Anderson&#39;s sq… Sout… Size: About 20 cm… &quot;C. quinquestriatus (…
+## 2 &lt;NA&gt;            Black-striped… Sout… Size: 18–20 cm (7… &quot;C. nigrovittatus (Ho…
+## 3 &lt;NA&gt;            Borneo black-… Nort… Size: 14–16 cm (6… &quot;C. orestes (Thomas, …
+## 4 &lt;NA&gt;            Ear-spot squi… Born… Size: 15–17 cm (6… &quot;C. adamsi (Kloss, 19…
+## 5 &lt;NA&gt;            Finlayson&#39;s s… Sout… Size: 19–21 cm (7… &quot;C. finlaysonii (Hors…
+## 6 &lt;NA&gt;            Grey-bellied … Sout… Size: 21–22 cm (8… &quot;C. caniceps (Gray, 1…
+## # ℹ abbreviated name: ¹​`Scientific name and subspecies`
+## # ℹ 2 more variables: `IUCN status and estimated population` &lt;chr&gt;,
+## #   Subspecies_Info &lt;chr&gt;</code></pre>
+<p>Next, I wanted to actually plot the regions all of the squirrels were
+from. To do this, I used the forcats functions to reorder the bars.</p>
+<pre class="r"><code>sciurid_plot_data &lt;- sciurid_final %&gt;%
+  # I wanted to filter out any rows where range might be missing
+  filter(!is.na(Range)) %&gt;%
+  count(Range) %&gt;%
+  # I only show the top 15 regions so the graph isn&#39;t too crowded
+  slice_max(n, n = 15)
+
+ggplot(sciurid_plot_data, aes(y = fct_reorder(Range, n), x = n)) +
+  geom_col(fill = &quot;orange&quot;) +
+  # Add labels to the bars for clarity
+  geom_text(aes(label = n), size = 3.5) +
+  labs(
+    title = &quot;Top 15 Regions by Sciurid Species Count&quot;,
+    subtitle = &quot;Based on Wikipedia List of Sciurids&quot;,
+    x = &quot;Number of Species&quot;,
+    y = &quot;Geographic Range&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="p03_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
+<p>From the data, we can see that a lot of Scurid Species can be found
+in Southeast Asia. However, coming up quickly behind is Western U.S.
+Since these are where the majority of Scurid species can be found, I’d
+like to know exactly which squirrels live in this area. To do this, I’ll
+select cases with Southeast Asia and Western U.S. as cases.</p>
+<pre class="r"><code>priority_squirrels &lt;- sciurid_final %&gt;%
+  filter(
+    str_detect(Range, &quot;Southeastern Asia&quot;) | 
+    str_detect(Range, &quot;Western United States&quot;)
+  ) %&gt;%
+  select(Scientific_Name, `Common name`, Range)
+
+head(priority_squirrels)</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   Scientific_Name `Common name`          Range            
+##   &lt;chr&gt;           &lt;chr&gt;                  &lt;chr&gt;            
+## 1 &lt;NA&gt;            Black-striped squirrel Southeastern Asia
+## 2 &lt;NA&gt;            Finlayson&#39;s squirrel   Southeastern Asia
+## 3 &lt;NA&gt;            Grey-bellied squirrel  Southeastern Asia
+## 4 &lt;NA&gt;            Inornate squirrel      Southeastern Asia
+## 5 &lt;NA&gt;            Plantain squirrel      Southeastern Asia
+## 6 &lt;NA&gt;            Prevost&#39;s squirrel     Southeastern Asia</code></pre>
+<pre class="r"><code>nrow(priority_squirrels)</code></pre>
+<pre><code>## [1] 64</code></pre>
+<p>Now that I’ve split my data apart, I wanted to make a tool so people
+could find the specific squirrels in this region.</p>
+<pre class="r"><code>library(DT)
+
+datatable(priority_squirrels, 
+          options = list(pageLength = 5),
+          colnames = c(&quot;Scientific Name&quot;, &quot;Common Name&quot;, &quot;Geographic Range&quot;),
+          caption = &#39;Searchable List of Southeast Asian and Western U.S. Squirrels&#39;)</code></pre>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-96be8450aa857b287e00" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-96be8450aa857b287e00">{"x":{"filter":"none","vertical":false,"caption":"<caption>Searchable List of Southeast Asian and Western U.S. Squirrels<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],["Black-striped squirrel","Finlayson's squirrel","Grey-bellied squirrel","Inornate squirrel","Plantain squirrel","Prevost's squirrel","Least pygmy squirrel","Three-striped ground squirrel","Berdmore's ground squirrel","Black-eared squirrel","Shrew-faced squirrel","Horse-tailed squirrel","Low's squirrel","Slender squirrel","Cambodian striped squirrel","Himalayan striped squirrel","Black giant squirrel","Cream-coloured giant squirrel","Black flying squirrel","Indochinese flying squirrel","Jentink's flying squirrel","Red-cheeked flying squirrel","Javanese flying squirrel","Spotted giant flying squirrel","Temminck's flying squirrel","Vordermann's flying squirrel","Smoky flying squirrel","Abert's squirrel","Arizona gray squirrel","Western gray squirrel","Harris's antelope squirrel","San Joaquin antelope squirrel","White-tailed antelope squirrel","Cascade golden-mantled ground squirrel","Golden-mantled ground squirrel","Utah prairie dog","White-tailed prairie dog","Hoary marmot","Yellow-bellied marmot","Allen's chipmunk","Alpine chipmunk","California chipmunk","Cliff chipmunk","Colorado chipmunk","Lodgepole chipmunk","Long-eared chipmunk","Merriam's chipmunk","Palmer's chipmunk","Panamint chipmunk","Red-tailed chipmunk","Siskiyou chipmunk","Sonoma chipmunk","Townsend's chipmunk","Uinta chipmunk","Yellow-cheeked chipmunk","Yellow-pine chipmunk","California ground squirrel","Belding's ground squirrel","Columbian ground squirrel","Merriam's ground squirrel","Northern Idaho ground squirrel","Piute ground squirrel","Uinta ground squirrel","Mohave ground squirrel"],["Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Western United States and western Mexico","Western United States and western Mexico","Western United States and western Mexico","Western United States and western Mexico","Western United States","Western United States and western Mexico","Western United States and western Canada","Western United States and western Canada","Western United States","Western United States","Western United States and western Canada","Western United States and western Canada","Western United States","Western United States","Western United States and western Mexico","Western United States and western Mexico","Western United States","Western United States","Western United States","Western United States and western Mexico","Western United States","Western United States","Western United States and western Canada","Western United States","Western United States","Western United States and western Canada","Western United States","Western United States","Western United States and western Canda","Western United States and western Mexico","Western United States","Western United States and western Canada","Western United States","Western United States","Western United States","Western United States","Western United States"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Scientific Name<\/th>\n      <th>Common Name<\/th>\n      <th>Geographic Range<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Scientific_Name","targets":1},{"name":"Common name","targets":2},{"name":"Range","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<p>Now I’ll make an overall table for the entire dataset scrapped from
+the Wikipedia page. But to do that, I need to select only the Scientific
+Name, Common Name, and Geographic Range.</p>
+<pre class="r"><code>main_squirrels &lt;- sciurid_final %&gt;%
+  select(Scientific_Name, `Common name`, Range)
+
+head(main_squirrels)</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   Scientific_Name `Common name`                Range                     
+##   &lt;chr&gt;           &lt;chr&gt;                        &lt;chr&gt;                     
+## 1 &lt;NA&gt;            Anderson&#39;s squirrel          Southern China and Myanmar
+## 2 &lt;NA&gt;            Black-striped squirrel       Southeastern Asia         
+## 3 &lt;NA&gt;            Borneo black-banded squirrel Northern Borneo           
+## 4 &lt;NA&gt;            Ear-spot squirrel            Borneo                    
+## 5 &lt;NA&gt;            Finlayson&#39;s squirrel         Southeastern Asia         
+## 6 &lt;NA&gt;            Grey-bellied squirrel        Southeastern Asia</code></pre>
+<pre class="r"><code>datatable(main_squirrels, 
+          options = list(pageLength = 5), 
+          colnames = c(&quot;Scientific Name&quot;, &quot;Common Name&quot;, &quot;Geographic Range&quot;), 
+          caption = &#39;Searchable List of Squirrels Across the World&#39;)</code></pre>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-92076ba61ab3e84e229f" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-92076ba61ab3e84e229f">{"x":{"filter":"none","vertical":false,"caption":"<caption>Searchable List of Squirrels Across the World<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250","251","252","253","254","255","256","257","258","259","260","261","262","263","264","265","266","267","268","269","270","271","272","273","274","275","276","277","278","279","280","281","282","283","284"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],["Anderson's squirrel","Black-striped squirrel","Borneo black-banded squirrel","Ear-spot squirrel","Finlayson's squirrel","Grey-bellied squirrel","Inornate squirrel","Irrawaddy squirrel","Kinabalu squirrel","Kloss's squirrel","Mentawai squirrel","Pallas's squirrel","Phayre's squirrel","Plantain squirrel","Prevost's squirrel","Asian red-cheeked squirrel","Bornean mountain ground squirrel","Orange-bellied Himalayan squirrel","Perny's long-nosed squirrel","Red-hipped squirrel","Red-throated squirrel","Least pygmy squirrel","Philippine pygmy squirrel","Tufted pygmy squirrel","Dusky striped squirrel","Indian palm squirrel","Jungle palm squirrel","Layard's palm squirrel","Nilgiri striped squirrel","Northern palm squirrel","Sculptor squirrel","Lowland long-nosed squirrel","Montane long-nosed squirrel","Four-striped ground squirrel","Mentawai three-striped squirrel","Niobe ground squirrel","Three-striped ground squirrel","Berdmore's ground squirrel","Black-eared squirrel","Alston's squirrel","Mount Topapu squirrel","Celebes dwarf squirrel","Sanghir squirrel","Secretive dwarf squirrel","Weber's dwarf squirrel","Whitish dwarf squirrel","Shrew-faced squirrel","Red-bellied squirrel","Brooke's squirrel","Busuanga squirrel","Culion tree squirrel","Davao squirrel","Fraternal squirrel","Horse-tailed squirrel","Jentink's squirrel","Low's squirrel","Mindanao squirrel","Northern Palawan tree squirrel","Palawan montane squirrel","Philippine tree squirrel","Samar squirrel","Slender squirrel","Southern Palawan tree squirrel","Cambodian striped squirrel","Himalayan striped squirrel","Maritime striped squirrel","Swinhoe's striped squirrel","Black giant squirrel","Cream-coloured giant squirrel","Grizzled giant squirrel","Indian giant squirrel","Neotropical pygmy squirrel","Groove-toothed flying squirrel","Black flying squirrel","Thomas's flying squirrel","Hairy-footed flying squirrel","Laotian giant flying squirrel","Namdapha flying squirrel","Kashmir flying squirrel","Western woolly flying squirrel","Northern flying squirrel","Southern flying squirrel","Arrow flying squirrel","Bartel's flying squirrel","Indochinese flying squirrel","Jentink's flying squirrel","Palawan flying squirrel","Particolored flying squirrel","Red-cheeked flying squirrel","Sipora flying squirrel","Sumatran flying squirrel","Javanese flying squirrel","Mentawi flying squirrel","Amazon dwarf squirrel","Central American dwarf squirrel","Santander dwarf squirrel","Western dwarf squirrel","Hose's pygmy flying squirrel","Lesser pygmy flying squirrel","Selangor pygmy flying squirrel","Bhutan giant flying squirrel","Chinese giant flying squirrel","Hodgson's giant flying squirrel","Indian giant flying squirrel","Japanese giant flying squirrel","Mechuka giant flying squirrel","Mishmi giant flying squirrel","Red and white giant flying squirrel","Red giant flying squirrel","Spotted giant flying squirrel","Basilan flying squirrel","Hagen's flying squirrel","Mindanao flying squirrel","Siberut flying squirrel","Temminck's flying squirrel","Travancore flying squirrel","Vordermann's flying squirrel","Whiskered flying squirrel","Japanese dwarf flying squirrel","Siberian flying squirrel","Smoky flying squirrel","Tufted ground squirrel","Abert's squirrel","Allen's squirrel","Andean squirrel","Arizona gray squirrel","Bolivian squirrel","Brazilian squirrel","Calabrian black squirrel","Caucasian squirrel","Collie's squirrel","Deppe's squirrel","Eastern gray squirrel","Fiery squirrel","Fox squirrel","Guayaquil squirrel","Japanese squirrel","Junín red squirrel","Mexican fox squirrel","Mexican gray squirrel","Northern Amazon red squirrel","Peters's squirrel","Red squirrel","Red-tailed squirrel","Richmond's squirrel","Sanborn's squirrel","Southern Amazon red squirrel","Variegated squirrel","Western gray squirrel","Yellow-throated squirrel","Yucatan squirrel","Bangs's mountain squirrel","American red squirrel","Douglas squirrel","Mearns's squirrel","Complex-toothed flying squirrel","Harris's antelope squirrel","San Joaquin antelope squirrel","Texas antelope squirrel","White-tailed antelope squirrel","Barbary ground squirrel","Cascade golden-mantled ground squirrel","Golden-mantled ground squirrel","Sierra Madre ground squirrel","Black-tailed prairie dog","Gunnison's prairie dog","Mexican prairie dog","Utah prairie dog","White-tailed prairie dog","Ebian's palm squirrel","Siberian chipmunk","Carruther's mountain squirrel","Congo rope squirrel","Du Chaillu's rope squirrel","Fire-footed rope squirrel","Kintampo rope squirrel","Lady Burton's rope squirrel","Lunda rope squirrel","Red-cheeked rope squirrel","Ribboned rope squirrel","Thomas's rope squirrel","Gambian sun squirrel","Mutable sun squirrel","Red-legged sun squirrel","Ruwenzori sun squirrel","Small sun squirrel","Zanj sun squirrel","Mexican ground squirrel","Thirteen-lined ground squirrel","Alaska marmot","Alpine marmot","Black-capped marmot","Bobak marmot","Gray marmot","Groundhog","Himalayan marmot","Hoary marmot","Long-tailed marmot","Menzbier's marmot","Olympic marmot","Tarbagan marmot","Vancouver Island marmot","Yellow-bellied marmot","African pygmy squirrel","Allen's chipmunk","Alpine chipmunk","Buller's chipmunk","California chipmunk","Cliff chipmunk","Colorado chipmunk","Durango chipmunk","Gray-collared chipmunk","Gray-footed chipmunk","Hopi chipmunk","Least chipmunk","Lodgepole chipmunk","Long-eared chipmunk","Merriam's chipmunk","Palmer's chipmunk","Panamint chipmunk","Red-tailed chipmunk","Siskiyou chipmunk","Sonoma chipmunk","Townsend's chipmunk","Uinta chipmunk","Yellow-cheeked chipmunk","Yellow-pine chipmunk","Ring-tailed ground squirrel","Tropical ground squirrel","California ground squirrel","Rock squirrel","Alexander's bush squirrel","Black and red bush squirrel","Boehm's bush squirrel","Cooper's mountain squirrel","Green bush squirrel","Ochre bush squirrel","Red bush squirrel","Smith's bush squirrel","Striped bush squirrel","Swynnerton's bush squirrel","Vincent's bush squirrel","Franklin's ground squirrel","Forest giant squirrel","Slender-tailed squirrel","Forrest's rock squirrel","Père David's rock squirrel","Long-clawed ground squirrel","Alashan ground squirrel","Asia Minor ground squirrel","Brandt's ground squirrel","Caucasian Mountain ground squirrel","Daurian ground squirrel","European ground squirrel","Little ground squirrel","Pallid ground squirrel","Red-cheeked ground squirrel","Relict ground squirrel","Russet ground squirrel","Speckled ground squirrel","Taurus ground squirrel","Tian Shan ground squirrel","Yellow ground squirrel","Eastern chipmunk","Arctic ground squirrel","Belding's ground squirrel","Columbian ground squirrel","Long-tailed ground squirrel","Merriam's ground squirrel","Northern Idaho ground squirrel","Piute ground squirrel","Richardson's ground squirrel","Townsend's ground squirrel","Uinta ground squirrel","Washington ground squirrel","Wyoming ground squirrel","Mohave ground squirrel","Perote ground squirrel","Round-tailed ground squirrel","Spotted ground squirrel","African striped ground squirrel","Cape ground squirrel","Mountain ground squirrel","Unstriped ground squirrel"],["Southern China and Myanmar","Southeastern Asia","Northern Borneo","Borneo","Southeastern Asia","Southeastern Asia","Southeastern Asia","Southern Asia","Malaysia","Indonesia","Indonesia","Southeastern and eastern Asia","Southern China and Myanmar","Southeastern Asia","Southeastern Asia","Southeastern and eastern Asia","Borneo","Southern Asia","Eastern Asia","China and Vietnam","China and Vietnam","Southeastern Asia","Philippines","Borneo","Sri Lanka","India and Sri Lanka","India","Sri Lanka","India","Southern Asia","Borneo","Indonesia","Indonesia","Borneo","Indonesia","Indonesia","Southeastern Asia","Southeastern Asia","Southeastern Asia","Indonesia","Indonesia","Indonesia","Indonesia and Philippines","Indonesia","Indonesia","Indonesia","Southeastern Asia","Island of Sulawesi in Indonesia","Indonesia and Malaysia","Philippines","Philippines","Philippines","Indonesia","Southeastern Asia","Indonesia and Malaysia","Southeastern Asia","Philippines","Philippines","Philippines","Philippines","Philippines","Southeastern Asia","Philippines","Southeastern Asia","Southeastern Asia","Southeastern and eastern Asia","China and southeastern Asia","Southeastern Asia","Southeastern Asia","Southern India and Sri Lanka","India","Northern South America","Central China","Southeastern Asia","Indonesia and Malaysia","Southeastern and eastern Asia","Laos","Eastern India","Central Asia","Western China","Canada and northern United States","Eastern North America","Indonesia","Indonesia","Southeastern Asia","Southeastern Asia","Philippines","Southeastern and eastern Asia","Southeastern Asia","Indonesia","Indonesia","Southeastern Asia","Indonesia","Northwestern South America","Central America and northern South America","Northern South America","Central America and northern South America","Island of Borneo","Borneo","Malaysia","Bhutan and Nepal","Central China","Central Asia","Southern, eastern, and southeastern Asia","Japan","Northeastern India","Northeastern India","China and Taiwan","Southern, eastern, and southeastern Asia","Southeastern Asia","Philippines","Indonesia","Philippines","Indonesia","Southeastern Asia","Southern India","Southeastern Asia","Indonesia and Malaysia","Japan","Northern Asia and northern Europe","Southeastern Asia","Borneo","Western United States and western Mexico","Mexico","Northwestern South America","Western United States and western Mexico","Western South America","South America","Southern Italy","Western Asia","Western Mexico","Southern Mexico and Central America","Canada and eastern United States","Venezuela","Canada and United States","Ecuador and Peru","Japan","Ecuador and Peru","Mexico and southern United States","Mexico and Guatemala","Northwestern South America","Central Mexico","Europe and Asia","Northwestern South America and Central America","Nicaragua","Peru and Bolivia","Northwestern South America","Southern Mexico and Central America","Western United States and western Mexico","Northern South America","Southern Mexico and Central America","Costa Rica and Panama","Canada and United States","Western Canada and western United States","Mexico","Southern China","Western United States and western Mexico","Western United States","Southwestern United States","Western United States and western Mexico","Northwestern Africa","Western United States and western Canada","Western United States and western Canada","Western Mexico","Central North America","Southwestern United States","Northern Mexico","Western United States","Western United States","Western Africa","Northern and eastern Asia and Europe","Central Africa","Central Africa","Central Africa","Central and western Africa","Western Africa","Central Africa","Central Africa","Central and western Africa","Central Africa","Central and western Africa","Sub-Saharan Africa","Eastern Africa","Central and western Africa","Central Africa","Western Africa","Eastern Africa","Mexico and southern United States","United States and Canada","Northern Alaska","Europe","Eastern Russia","Western Asia and eastern Europe","Central Asia","United States and Canada","Nepal and western China","Western United States and western Canada","Central Asia","Central Asia","Northwestern United States","Central Asia","Vancouver Island in western Canada","Western United States and western Canada","Western Africa","Western United States","Western United States","Mexico","Western United States and western Mexico","Western United States and western Mexico","Western United States","Mexico","Southwestern United States","Southwestern United States","Southwestern United States","Canada and United States","Western United States","Western United States","Western United States and western Mexico","Western United States","Western United States","Western United States and western Canada","Western United States","Western United States","Western United States and western Canada","Western United States","Western United States","Western United States and western Canda","Central Mexico","Mexico","Western United States and western Mexico","Mexico and southwestern United States","Central Africa","Southeastern Africa","Central Africa","Western Africa","Central and western Africa","Eastern Africa","Eastern Africa","Southern Africa","Eastern Africa","Tanzania","Mozambique","Central United States and southern Canada","Western and central Africa","Western Africa","Southern China","China","Central Asia","China and Mongolia","Western Asia","Central Asia","Southwestern Russia","Eastern Asia","Eastern Europe","Eastern Europe and western Asia","Mongolia","Central Asia","Central Asia","Central Asia","Eastern Europe and western Asia","Turkey","Western China","Central Asia","Eastern United States and eastern Canada","Northern Canada, Alaska, and eastern Russia","Western United States","Western United States and western Canada","Central and eastern Asia","Western United States","Western United States","Western United States","Northern United States and southern Canada","Northwestern United States","Western United States","Northwestern United States","Northwestern United States","Western United States","Central Mexico","Southwestern United States and Northwestern Mexico","Mexico and central and western United States","Sub-Saharan Africa","Southern Africa","Southern Africa","Eastern Africa"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Scientific Name<\/th>\n      <th>Common Name<\/th>\n      <th>Geographic Range<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Scientific_Name","targets":1},{"name":"Common name","targets":2},{"name":"Range","targets":3}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 
 
 
