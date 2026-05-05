@@ -1,10 +1,15 @@
 ---
-title: "Project Sekai Data"
+title: "Project Sekai Data Cleaning and Graphing"
+author: "Kryschelle Fakir"
+date: "2026-05-05"
+output: 
+  html_document:
+    theme: cerulean
 ---
 
 For this project, I got some data from the Wiki from one of my favorite mobile games. I tried webscraping but that simply did not work. 
 
-For this piece, I would love to calculate how many cards exist for each character, the most frequent rarity and availability (limited or not) for each character, and also generate a graph of popularity for each character. The variables are below: 
+For this piece, my goal is to clean the data to make it usable for my final portfolio piece. I would also like to run some preliminary graphs to calculate how many cards exist for each character and group. I want to see if there are discrepancies and if some characters are more highly favored than others.
 
 + Name: Name of the card 
 + Unit/Group: Name of the group
@@ -17,7 +22,7 @@ For this piece, I would love to calculate how many cards exist for each characte
     + Yoisaki Kanade  
     + Asahina Mafuyu  
     + Shinonome Ena  
-    +Akiyama Mizuki
+    + Akiyama Mizuki
   + More More Jump! 
     + Hanasato Minori  
     + Kiritani Haruka  
@@ -104,18 +109,61 @@ df_cleaned <- df_cleaned %>%
 
 ```
 
-## Data Analysis 
+## Character and Group Colors 
 
-Next, I wanted to see how many cards existed for each group. As such, I generated a bar graph and factored that by groups. I do the same thing for characters, as well. 
+In the game, each group and character have their own specific color. I thought it would be neat to factor this into the graphing below.
+
+```{r}
+pjsk_colors <- c(
+  "Leo/need" = "#4455dd",           # Deep Blue
+  "MORE MORE JUMP!" = "#88dd22",    # Bright Green
+  "Vivid BAD SQUAD" = "#ee1166",    # Vivid Pink/Red
+  "Wonderlands×Showtime" = "#ff9900", # Orange
+  "Nightcord at 25:00" = "#884499", # Dark Purple
+  "Virtual Singer" = "#33ccbb"      # Teal/Miku Blue
+)
+
+char_colors <- c(
+  # Leo/need
+  "Ichika Hoshino" = "#33aaee", "Saki Tenma" = "#ffdd44", 
+  "Honami Mochizuki" = "#ff66bb", "Shiho Hinomori" = "#bbdd22",
+  
+  # MORE MORE JUMP!
+  "Minori Hanasato" = "#ff88dd", "Haruka Kiritani" = "#99ccff", 
+  "Airi Momoi" = "#ffaaff", "Shizuku Hinomori" = "#99ffdd",
+  
+  # Vivid BAD SQUAD
+  "Kohane Azusawa" = "#ff66aa", "An Shiraishi" = "#0066ee", 
+  "Akito Shinonome" = "#ff7722", "Toya Aoyagi" = "#0077dd",
+  
+  # Wonderlands×Showtime
+  "Tsukasa Tenma" = "#ffbb00", "Emu Otori" = "#ff66cc", 
+  "Nene Kusanagi" = "#33dd99", "Rui Kamishiro" = "#bb88ff",
+  
+  # 25-ji, Nightcord de.
+  "Kanade Yoisaki" = "#bb6688", "Mafuyu Asahina" = "#8888cc", 
+  "Ena Shinonome" = "#ccaa88", "Mizuki Akiyama" = "#e4a8ca",
+    "Hatsune Miku" = "#33ccbb", "Kagamine Rin" = "#ffcc11", 
+  "Kagamine Len" = "#ffee11", "Megurine Luka" = "#ffbbcc", 
+  "MEIKO" = "#dd4444", "KAITO" = "#3366cc"
+)
+
+df_cleaned <- df_cleaned %>%
+  mutate(character_name = str_remove(character, "\\s\\(.*\\)"))
+
+```
+
+Next, I wanted to see how many cards existed for each group and character. As such, I generated a bar graph and factored that by groups and a bar graph that shows the amount of cards per character.
 
 ```{r}
 
-ggplot(df_cleaned, aes(x = fct_infreq(unit), fill = unit)) +
+ggplot(df_cleaned, aes(y = fct_infreq(unit), fill = unit)) +
   geom_bar() +
+  scale_fill_manual(values = pjsk_colors) +
   labs(
-    title = "Distribution of Cards by Group",
-    x = "Unit / Group",
-    y = "Number of Cards"
+    title = "Number of Cards per Group",
+    x = "Count",
+    y = "Group Name"
   ) +
   theme_minimal() +
   theme(legend.position = "none")
@@ -123,17 +171,22 @@ ggplot(df_cleaned, aes(x = fct_infreq(unit), fill = unit)) +
 ```
 
 ```{r, figh.width = 20, fig.height=20 }
-ggplot(df_cleaned, aes(x = fct_infreq(character))) +
+
+ggplot(df_cleaned, aes(y = fct_infreq(character), fill = character)) +
   geom_bar() +
+  scale_fill_manual(values = char_colors) +
   labs(
     title = "Total Cards per Character",
-    x = "Character Name",
-    y = "Number of Cards"
+    subtitle = "Colored by official character image colors",
+    x = "Count of Cards",
+    y = "Character"
   ) +
   theme_minimal() +
   theme(
-    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
-    legend.position = "bottom"
+    legend.position = "none", 
+    axis.text.y = element_text(size = 8)
   )
 
 ```
+
+From these visualizations, it's clear that Saki Tenma gets the most cards and Kaito from Nightcord at 25:00 receives the least.

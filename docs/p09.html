@@ -9,14 +9,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Kryschelle Fakir" />
 
+<meta name="date" content="2026-05-05" />
 
-<title>Project Sekai Data</title>
+<title>Project Sekai Data Cleaning and Graphing</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -290,7 +292,10 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Project Sekai Data</h1>
+<h1 class="title toc-ignore">Project Sekai Data Cleaning and
+Graphing</h1>
+<h4 class="author">Kryschelle Fakir</h4>
+<h4 class="date">2026-05-05</h4>
 
 </div>
 
@@ -298,10 +303,11 @@ $(document).ready(function () {
 <p>For this project, I got some data from the Wiki from one of my
 favorite mobile games. I tried webscraping but that simply did not
 work.</p>
-<p>For this piece, I would love to calculate how many cards exist for
-each character, the most frequent rarity and availability (limited or
-not) for each character, and also generate a graph of popularity for
-each character. The variables are below:</p>
+<p>For this piece, my goal is to clean the data to make it usable for my
+final portfolio piece. I would also like to run some preliminary graphs
+to calculate how many cards exist for each character and group. I want
+to see if there are discrepancies and if some characters are more highly
+favored than others.</p>
 <ul>
 <li>Name: Name of the card</li>
 <li>Unit/Group: Name of the group
@@ -322,7 +328,8 @@ each character. The variables are below:</p>
 <li>Asahina Mafuyu<br />
 </li>
 <li>Shinonome Ena<br />
-+Akiyama Mizuki</li>
+</li>
+<li>Akiyama Mizuki</li>
 </ul></li>
 <li>More More Jump!
 <ul>
@@ -454,34 +461,77 @@ print(colnames(df_cleaned))</code></pre>
 <pre class="r"><code>df_cleaned &lt;- df_cleaned %&gt;% 
   rename(unit = &quot;group&quot;)</code></pre>
 </div>
-<div id="data-analysis" class="section level2">
-<h2>Data Analysis</h2>
-<p>Next, I wanted to see how many cards existed for each group. As such,
-I generated a bar graph and factored that by groups. I do the same thing
-for characters, as well.</p>
-<pre class="r"><code>ggplot(df_cleaned, aes(x = fct_infreq(unit), fill = unit)) +
+<div id="character-and-group-colors" class="section level2">
+<h2>Character and Group Colors</h2>
+<p>In the game, each group and character have their own specific color.
+I thought it would be neat to factor this into the graphing below.</p>
+<pre class="r"><code>pjsk_colors &lt;- c(
+  &quot;Leo/need&quot; = &quot;#4455dd&quot;,           # Deep Blue
+  &quot;MORE MORE JUMP!&quot; = &quot;#88dd22&quot;,    # Bright Green
+  &quot;Vivid BAD SQUAD&quot; = &quot;#ee1166&quot;,    # Vivid Pink/Red
+  &quot;Wonderlands×Showtime&quot; = &quot;#ff9900&quot;, # Orange
+  &quot;Nightcord at 25:00&quot; = &quot;#884499&quot;, # Dark Purple
+  &quot;Virtual Singer&quot; = &quot;#33ccbb&quot;      # Teal/Miku Blue
+)
+
+char_colors &lt;- c(
+  # Leo/need
+  &quot;Ichika Hoshino&quot; = &quot;#33aaee&quot;, &quot;Saki Tenma&quot; = &quot;#ffdd44&quot;, 
+  &quot;Honami Mochizuki&quot; = &quot;#ff66bb&quot;, &quot;Shiho Hinomori&quot; = &quot;#bbdd22&quot;,
+  
+  # MORE MORE JUMP!
+  &quot;Minori Hanasato&quot; = &quot;#ff88dd&quot;, &quot;Haruka Kiritani&quot; = &quot;#99ccff&quot;, 
+  &quot;Airi Momoi&quot; = &quot;#ffaaff&quot;, &quot;Shizuku Hinomori&quot; = &quot;#99ffdd&quot;,
+  
+  # Vivid BAD SQUAD
+  &quot;Kohane Azusawa&quot; = &quot;#ff66aa&quot;, &quot;An Shiraishi&quot; = &quot;#0066ee&quot;, 
+  &quot;Akito Shinonome&quot; = &quot;#ff7722&quot;, &quot;Toya Aoyagi&quot; = &quot;#0077dd&quot;,
+  
+  # Wonderlands×Showtime
+  &quot;Tsukasa Tenma&quot; = &quot;#ffbb00&quot;, &quot;Emu Otori&quot; = &quot;#ff66cc&quot;, 
+  &quot;Nene Kusanagi&quot; = &quot;#33dd99&quot;, &quot;Rui Kamishiro&quot; = &quot;#bb88ff&quot;,
+  
+  # 25-ji, Nightcord de.
+  &quot;Kanade Yoisaki&quot; = &quot;#bb6688&quot;, &quot;Mafuyu Asahina&quot; = &quot;#8888cc&quot;, 
+  &quot;Ena Shinonome&quot; = &quot;#ccaa88&quot;, &quot;Mizuki Akiyama&quot; = &quot;#e4a8ca&quot;,
+    &quot;Hatsune Miku&quot; = &quot;#33ccbb&quot;, &quot;Kagamine Rin&quot; = &quot;#ffcc11&quot;, 
+  &quot;Kagamine Len&quot; = &quot;#ffee11&quot;, &quot;Megurine Luka&quot; = &quot;#ffbbcc&quot;, 
+  &quot;MEIKO&quot; = &quot;#dd4444&quot;, &quot;KAITO&quot; = &quot;#3366cc&quot;
+)
+
+df_cleaned &lt;- df_cleaned %&gt;%
+  mutate(character_name = str_remove(character, &quot;\\s\\(.*\\)&quot;))</code></pre>
+<p>Next, I wanted to see how many cards existed for each group and
+character. As such, I generated a bar graph and factored that by groups
+and a bar graph that shows the amount of cards per character.</p>
+<pre class="r"><code>ggplot(df_cleaned, aes(y = fct_infreq(unit), fill = unit)) +
   geom_bar() +
+  scale_fill_manual(values = pjsk_colors) +
   labs(
-    title = &quot;Distribution of Cards by Group&quot;,
-    x = &quot;Unit / Group&quot;,
-    y = &quot;Number of Cards&quot;
+    title = &quot;Number of Cards per Group&quot;,
+    x = &quot;Count&quot;,
+    y = &quot;Group Name&quot;
   ) +
   theme_minimal() +
   theme(legend.position = &quot;none&quot;)</code></pre>
-<p><img src="p09_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" /></p>
-<pre class="r"><code>ggplot(df_cleaned, aes(x = fct_infreq(character))) +
+<p><img src="p09_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
+<pre class="r"><code>ggplot(df_cleaned, aes(y = fct_infreq(character), fill = character)) +
   geom_bar() +
+  scale_fill_manual(values = char_colors) +
   labs(
     title = &quot;Total Cards per Character&quot;,
-    x = &quot;Character Name&quot;,
-    y = &quot;Number of Cards&quot;
+    subtitle = &quot;Colored by official character image colors&quot;,
+    x = &quot;Count of Cards&quot;,
+    y = &quot;Character&quot;
   ) +
   theme_minimal() +
   theme(
-    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
-    legend.position = &quot;bottom&quot;
+    legend.position = &quot;none&quot;, 
+    axis.text.y = element_text(size = 8)
   )</code></pre>
-<p><img src="p09_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
+<p><img src="p09_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" /></p>
+<p>From these visualizations, it’s clear that Saki Tenma gets the most
+cards and Kaito from Nightcord at 25:00 receives the least.</p>
 </div>
 
 
