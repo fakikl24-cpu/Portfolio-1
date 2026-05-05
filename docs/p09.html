@@ -11,7 +11,7 @@
 
 
 
-<title>Portfolio 9</title>
+<title>Project Sekai Data</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,18 +290,199 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 9</h1>
+<h1 class="title toc-ignore">Project Sekai Data</h1>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>For this project, I got some data from the Wiki from one of my
+favorite mobile games. I tried webscraping but that simply did not
+work.</p>
+<p>For this piece, I would love to calculate how many cards exist for
+each character, the most frequent rarity and availability (limited or
+not) for each character, and also generate a graph of popularity for
+each character. The variables are below:</p>
+<ul>
+<li>Name: Name of the card</li>
+<li>Unit/Group: Name of the group
+<ul>
+<li>Vivid Bad Squad
+<ul>
+<li>Azusawa Kohane</li>
+<li>Shiraishi An<br />
+</li>
+<li>Shinonome Akito<br />
+</li>
+<li>Aoyagi Toya</li>
+</ul></li>
+<li>Nightcord at 25:00
+<ul>
+<li>Yoisaki Kanade<br />
+</li>
+<li>Asahina Mafuyu<br />
+</li>
+<li>Shinonome Ena<br />
++Akiyama Mizuki</li>
+</ul></li>
+<li>More More Jump!
+<ul>
+<li>Hanasato Minori<br />
+</li>
+<li>Kiritani Haruka<br />
+</li>
+<li>Momoi Airi<br />
+</li>
+<li>Hinomori Shizuku</li>
+</ul></li>
+<li>Leo Need
+<ul>
+<li>Hoshino Ichika</li>
+<li>Tenma Saki</li>
+<li>Mochizuki Honami +Hinomori Shiho</li>
+</ul></li>
+<li>Wonderlands x Showtime
+<ul>
+<li>Tenma Tsukasa<br />
+</li>
+<li>Otori Emu<br />
+</li>
+<li>Kusanagi Nene<br />
+</li>
+<li>Kamishiro Rui</li>
+</ul></li>
+<li>Virtual Singer
+<ul>
+<li>Hatsune Miku</li>
+<li>Kagamine Rin</li>
+<li>Kagamine Len</li>
+<li>Megurine Luka</li>
+<li>MEIKO</li>
+<li>KAITO</li>
+</ul></li>
+</ul></li>
+<li>Character: Name of the character
+<ul>
+<li>Character names are listed above under their respective groups.</li>
+</ul></li>
+<li>Type: The attribute assigned to each card.
+<ul>
+<li>Mysterious</li>
+<li>Cool</li>
+<li>Pure</li>
+<li>Happy</li>
+<li>Cute</li>
+</ul></li>
+<li>Rarity: The level of rarity for each card. On a scale of 1 to 4.
+Birthday rarity is similar to 4 star rarity but is exclusive to
+characters birthdays</li>
+<li>Availability: Determines when you get the card and how long it
+sticks around
+<ul>
+<li>Limited: Only present for a short amount of time. Will appear one
+more time and then is gone forever. Leads to much heartbreak.</li>
+<li>Permanent: You could get this card at any time and it will never go
+away. Usually the cards related to a permanent event.</li>
+<li>BD/AN Limited: Similar to Limited but exclusive for birthdays and
+anniversaries (virtual singers only have anniversaries, not
+birthdays)</li>
+</ul></li>
+<li>Skill Type: Determines what buffs it gives during gameplay.
+<ul>
+<li>Scorers</li>
+<li>Lockers</li>
+<li>Healers</li>
+<li>Hybrid</li>
+<li>High-Tier Competitive Skills</li>
+</ul></li>
+<li>Released: When the card first came out</li>
+<li>Event: The event related to the card. N/A for limited cards</li>
+<li>Costume: Some cards get special costumes to go along with them. This
+will coded as present or not.</li>
+</ul>
+<div id="data-cleaning" class="section level2">
+<h2>Data Cleaning</h2>
+<p>To begin, I loaded in the data and the packages. Then, I changed the
+symbols for the rarity variable into numbers. Then I made a new variable
+that accounts for whether the card had a costume and was associated with
+an event or not. This will make charting my graphs much easier. While
+graphing I ran into an issue with the ‘group’ variable and changed it to
+unit to make R less angry.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.5.3</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.6
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.1     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(readxl)
+
+pjsk_csv &lt;- read_excel(&quot;pjsk.csv.xlsx&quot;)
+
+library(tidyverse)
+
+df_cleaned &lt;- pjsk_csv %&gt;%
+  mutate(
+    rarity_numeric = case_when(
+      str_detect(Rarity, &quot;🎀&quot;) ~ 4,
+      TRUE ~ as.numeric(str_count(Rarity, &quot;⭐&quot;))
+    ),
+      has_costume = case_when(
+      is.na(Costume) | Costume == &quot;&quot; | Costume == &quot;None&quot; | Costume == &quot;-&quot; ~ &quot;Not Present&quot;,
+      TRUE ~ &quot;Present&quot;
+    ),
+    
+    is_event_card = case_when(
+      is.na(Event) | Event == &quot;&quot; | Event == &quot;None&quot; | Event == &quot;-&quot; ~ &quot;No&quot;,
+      TRUE ~ &quot;Yes&quot;
+    )
+  )
+
+library(tidyverse)
+
+colnames(df_cleaned) &lt;- tolower(trimws(colnames(df_cleaned)))
+
+print(colnames(df_cleaned))</code></pre>
+<pre><code>##  [1] &quot;name&quot;           &quot;group&quot;          &quot;character&quot;      &quot;type&quot;          
+##  [5] &quot;rarity&quot;         &quot;availability&quot;   &quot;skill type&quot;     &quot;date&quot;          
+##  [9] &quot;event&quot;          &quot;costume&quot;        &quot;rarity_numeric&quot; &quot;has_costume&quot;   
+## [13] &quot;is_event_card&quot;</code></pre>
+<pre class="r"><code>df_cleaned &lt;- df_cleaned %&gt;% 
+  rename(unit = &quot;group&quot;)</code></pre>
+</div>
+<div id="data-analysis" class="section level2">
+<h2>Data Analysis</h2>
+<p>Next, I wanted to see how many cards existed for each group. As such,
+I generated a bar graph and factored that by groups. I do the same thing
+for characters, as well.</p>
+<pre class="r"><code>ggplot(df_cleaned, aes(x = fct_infreq(unit), fill = unit)) +
+  geom_bar() +
+  labs(
+    title = &quot;Distribution of Cards by Group&quot;,
+    x = &quot;Unit / Group&quot;,
+    y = &quot;Number of Cards&quot;
+  ) +
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="p09_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" /></p>
+<pre class="r"><code>ggplot(df_cleaned, aes(x = fct_infreq(character))) +
+  geom_bar() +
+  labs(
+    title = &quot;Total Cards per Character&quot;,
+    x = &quot;Character Name&quot;,
+    y = &quot;Number of Cards&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position = &quot;bottom&quot;
+  )</code></pre>
+<p><img src="p09_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
+</div>
 
 
 

@@ -1,15 +1,139 @@
 ---
-title: "Portfolio 9"
+title: "Project Sekai Data"
 ---
 
-For this project, I want to try webscraping a Wiki from one of my favorite mobile games. I would love to calculate how many cards exist for each card, the most frequenet rarity for each character, and also generate a graph of popularity for each character. 
+For this project, I got some data from the Wiki from one of my favorite mobile games. I tried webscraping but that simply did not work. 
+
+For this piece, I would love to calculate how many cards exist for each character, the most frequent rarity and availability (limited or not) for each character, and also generate a graph of popularity for each character. The variables are below: 
+
++ Name: Name of the card 
++ Unit/Group: Name of the group
+  + Vivid Bad Squad
+    + Azusawa Kohane
+    + Shiraishi An  
+    + Shinonome Akito  
+    + Aoyagi Toya
+  + Nightcord at 25:00 
+    + Yoisaki Kanade  
+    + Asahina Mafuyu  
+    + Shinonome Ena  
+    +Akiyama Mizuki
+  + More More Jump! 
+    + Hanasato Minori  
+    + Kiritani Haruka  
+    + Momoi Airi  
+    + Hinomori Shizuku
+  + Leo Need
+    + Hoshino Ichika
+    + Tenma Saki
+    + Mochizuki Honami
+    +Hinomori Shiho
+  + Wonderlands x Showtime 
+    + Tenma Tsukasa  
+    + Otori Emu  
+    + Kusanagi Nene  
+    + Kamishiro Rui
+  + Virtual Singer
+    + Hatsune Miku
+    + Kagamine Rin
+    + Kagamine Len
+    + Megurine Luka
+    + MEIKO
+    + KAITO
++ Character: Name of the character 
+  + Character names are listed above under their respective groups.
++ Type: The attribute assigned to each card. 
+  + Mysterious 
+  + Cool
+  + Pure 
+  + Happy
+  + Cute
++ Rarity: The level of rarity for each card. On a scale of 1 to 4. Birthday rarity is similar to 4 star rarity but is exclusive to characters birthdays 
++ Availability: Determines when you get the card and how long it sticks around 
+  + Limited: Only present for a short amount of time. Will appear one more time and then is gone forever. Leads to much heartbreak. 
+  + Permanent: You could get this card at any time and it will never go away. Usually the cards related to a permanent event. 
+  + BD/AN Limited: Similar to Limited but exclusive for birthdays and anniversaries (virtual singers only have anniversaries, not birthdays)
++ Skill Type: Determines what buffs it gives during gameplay. 
+  + Scorers 
+  + Lockers 
+  + Healers
+  + Hybrid
+  + High-Tier Competitive Skills
++ Released: When the card first came out 
++ Event: The event related to the card. N/A for limited cards
++ Costume: Some cards get special costumes to go along with them. This will coded as present or not. 
+  
+## Data Cleaning 
+
+To begin, I loaded in the data and the packages. Then, I changed the symbols for the rarity variable into numbers. Then I made a new variable that accounts for whether the card had a costume and was associated with an event or not. This will make charting my graphs much easier. While graphing I ran into an issue with the 'group' variable and changed it to unit to make R less angry. 
 
 ```{r}
 
-library(robotstxt)
+library(tidyverse)
+library(readxl)
 
-paths_allowed("https://projectsekai.fandom.com/wiki/Cards_1-50")
+pjsk_csv <- read_excel("pjsk.csv.xlsx")
+
+library(tidyverse)
+
+df_cleaned <- pjsk_csv %>%
+  mutate(
+    rarity_numeric = case_when(
+      str_detect(Rarity, "🎀") ~ 4,
+      TRUE ~ as.numeric(str_count(Rarity, "⭐"))
+    ),
+      has_costume = case_when(
+      is.na(Costume) | Costume == "" | Costume == "None" | Costume == "-" ~ "Not Present",
+      TRUE ~ "Present"
+    ),
+    
+    is_event_card = case_when(
+      is.na(Event) | Event == "" | Event == "None" | Event == "-" ~ "No",
+      TRUE ~ "Yes"
+    )
+  )
+
+library(tidyverse)
+
+colnames(df_cleaned) <- tolower(trimws(colnames(df_cleaned)))
+
+print(colnames(df_cleaned))
+
+df_cleaned <- df_cleaned %>% 
+  rename(unit = "group")
 
 ```
 
+## Data Analysis 
 
+Next, I wanted to see how many cards existed for each group. As such, I generated a bar graph and factored that by groups. I do the same thing for characters, as well. 
+
+```{r}
+
+ggplot(df_cleaned, aes(x = fct_infreq(unit), fill = unit)) +
+  geom_bar() +
+  labs(
+    title = "Distribution of Cards by Group",
+    x = "Unit / Group",
+    y = "Number of Cards"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+```{r, figh.width = 20, fig.height=20 }
+ggplot(df_cleaned, aes(x = fct_infreq(character))) +
+  geom_bar() +
+  labs(
+    title = "Total Cards per Character",
+    x = "Character Name",
+    y = "Number of Cards"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position = "bottom"
+  )
+
+```
