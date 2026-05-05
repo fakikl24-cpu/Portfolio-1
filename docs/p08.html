@@ -9,14 +9,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Kryschelle Fakir" />
 
+<meta name="date" content="2026-05-05" />
 
-<title>Portfolio 8</title>
+<title>Squirrel</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -29,6 +31,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -219,6 +224,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -226,6 +294,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -290,21 +368,268 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 8</h1>
+<h1 class="title toc-ignore">Squirrel</h1>
+<h4 class="author">Kryschelle Fakir</h4>
+<h4 class="date">2026-05-05</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<pre class="r"><code>library(tufte)</code></pre>
+<pre><code>## Warning: package &#39;tufte&#39; was built under R version 4.5.3</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.5.3</code></pre>
+<pre class="r"><code>library(dplyr)</code></pre>
+<div id="introduction-to-squirrels" class="section level2" number="1">
+<h2><span class="header-section-number">1</span> Introduction to
+Squirrels</h2>
+<p>Squirrels are really really cute. I’m the biggest fan of squirrels
+because they make me obscenely happy. Their little faces and the way
+they hold their hands when they eat make them so precious. I often see
+them around my house, around campus, and around parks and they serve as
+a constant breath of fresh air amidst all of the technology I interact
+with on a day to day basis. Squirrels are also really important for the
+environment. They act as pollinators because when they eat nectar or
+pollen it gets allll over their fur and then they run around spreading
+the pollen to other flowers. They also aid in replanting trees. They
+sometimes forget where they left their acorns and those acorns become
+trees!</p>
+<p>Squirrels are pivotal to the ecosystem and our neighborhoods. They’re
+also biologically fascinating! Their tail prevents them from falling
+(most of time time) and they can land right on their feet by using their
+tail to right themselves mid-air. This is a feature present in
+tree-squirrels but not rock or ground squirrels since rock and ground
+squirrels do not need to climb as high and are, thus, not in as much
+danger of falling from extreme heights.</p>
+<p>They’re also incredibly smart! Squirrels have been noted to complete
+puzzles for rewards, similar to rats and crows.</p>
+<p><a href="https://www.youtube.com/watch?v=hFZFjoX2cGg">Click Here to
+Watch!</a></p>
+<p>While many hate squirrels (see r/fatsquirrelhate) for eating from
+their bird feeders and gardens, and while many hunt squirrels for food
+or sport, they are being recognized for their cuteness and even serve as
+pets to some.</p>
+<p>Historically, squirrels actually were kept as pets. In fact, <a
+href="https://www.atlasobscura.com/articles/pet-squirrel-craze">Benjamin
+Franklin kept a pet squirrel</a> whom was so beloved by Franklin that he
+wrote a poem for him after he passed. Squirrels can even be found in
+antique paintings.</p>
+<p>Nowadays, however, they are not fully suitable to be indoor pets due
+to their hyperactivity and mannerisms. In some cases, however, baby
+squirrels will be rescued by a good samaritan and nursed back to health
+before be released back into the wild. In other cases, these squirrels
+cannot be released and must be kept to maintain their health. Below is a
+list of such squirrels:</p>
+<div id="famous-squirrels" class="section level3" number="1.1">
+<h3><span class="header-section-number">1.1</span> Famous Squirrels</h3>
+<ul>
+<li>Thumbelina</li>
+</ul>
+<p>Thumbelina has a thyriod issue that makes her gain weight. She enjoys
+avocados, laying in a dryer full of clothes(while the dryer is off, of
+course), and hanging out with her friends (stuffed animals). She
+<strong>hates</strong> frogs and will warn her mom and dad about the
+impendeing doom that is a tiny tiny frog. Plus, her mom sounds like tiny
+belcher (I use mom and dad as substitues for owners cause that’s a whole
+child with human-like vet bills)</p>
+<center>
+<img
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR40QJN0Sbv87rQ0C5NdSZUNew3UVWmXV7wWA&amp;s" />
+</center>
+<ul>
+<li>Eve</li>
+</ul>
+<p>Eve is an 8 year old Eastern Gray Squirrel that loves hugging her
+mom’s hands and munching on daffodils. She has a cat tree all to
+herself. We love Eve.</p>
+<center>
+<img
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ2OL6xcE34QfoJmniFvIFndrG1ht-ofU3MA&amp;s" />
+</center>
+<ul>
+<li>Emma</li>
+</ul>
+<p>Emma is a wild squirrel that is often captured on camera on an
+account called “squirrel_boxes” on instagram (and maybe Tiktok). Her
+most viral videos include clutching her heart after she was started
+awake from a loud sound. She is a mother and can often be seen snuggling
+with her babies in the squirrel box. She uses the squirrel box as her
+home and is beloved by so many, including me.</p>
+<center>
+<img
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5DBrKALJVVf6q2eZfb6SRIZqsdYpXDH467Q&amp;s" />
+</center>
+<ul>
+<li>Fern</li>
+</ul>
+<p>Fern was rescued in 2021 after a storm blew her out of the nest. She
+has two younger squirrel siblings, Sweet Potato and Walnut. As the
+oldest of three, she loves taking naps and enjoying her alone time.</p>
+<center>
+<img
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfubDReEW_3NACAsnvmWIy0k6M4Hug7GzfzQ&amp;s" />
+</center>
+<p>While squirrels are a nuisance to many, it is my hope that they can
+be appreciated for their cuteness, their silly antics, their importance
+to the environment, and for their complexity.</p>
+<p>There exists quite a few types of squirrels around the world. I have
+included only a subset of such squirrels here.</p>
+</div>
+</div>
+<div id="rock-squirrels" class="section level2" number="2">
+<h2><span class="header-section-number">2</span> Rock Squirrels</h2>
+<p>The Rock Squirrel is a rugged, ground-dwelling member of the squirrel
+family commonly found throughout the Southwestern United States and
+Mexico. Unlike their tree-climbing relatives, these squirrels are
+primarily at home in rocky canyons, cliffs, and boulder fields where
+their mottled grayish-brown fur provides near-perfect camouflage against
+the stone. They are one of the largest species in the Sciuridae family
+and are known for their semi-fossorial lifestyle, often digging complex
+burrow systems beneath rocks to avoid predators and the desert heat.</p>
+<p>Beyond their burrowing habits, Rock Squirrels are surprisingly agile
+and can climb trees or cacti when food is scarce on the ground. They are
+opportunistic foragers with a diverse diet that includes seeds, fruit,
+and agave, but they are also known to scavenge for insects and
+occasionally small vertebrates. During the hottest parts of the year,
+they may enter a state of estivation (summer dormancy), and in colder
+high-altitude regions, they hibernate through the winter, making them
+highly resilient to the extreme temperature fluctuations of the
+desert.</p>
+<p><img
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC07yNzQ8BJFw2rdBYwq3vfQNsw5KY4PP5fw&amp;s" /></p>
+<p><img
+src="https://www.worldlifeexpectancy.com//images/a/w/b/otospermophilus-variegatus/otospermophilus-variegatus.webp" /></p>
+</div>
+<div id="tufted-pygmy-squirrel" class="section level2" number="3">
+<h2><span class="header-section-number">3</span> Tufted Pygmy
+Squirrel</h2>
+<p>Hidden within the dense rainforests of Borneo, the Tufted Pygmy
+Squirrel is a miniature marvel of evolution. As one of the smallest
+squirrel species on the planet, it is often no larger than a human palm
+and weighs less than an ounce. They are best known for the distinct,
+elongated tufts of white hair that sprout from the tips of their ears,
+though the exact biological purpose of these tufts remains a mystery.
+These tiny rodents are incredibly fast and agile, spending their lives
+spiraling up and down tree trunks with jerky, lightning-fast
+movements.</p>
+<p>Unlike many larger squirrels that feast on bulky nuts, the Tufted
+Pygmy Squirrel has a specialized diet consisting mainly of moss, bark,
+and lichen found on the surface of tropical trees. Their small size
+allows them to occupy a unique ecological niche, navigating thin
+branches and crevices that larger predators cannot reach. Because of
+their shy nature and the thick canopy they inhabit, they are rarely seen
+by humans, remaining one of the more elusive and enchanting residents of
+the Southeast Asian rainforests.</p>
+<p><img
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_rpIN4CYO89VB5VIBCAqYSSa1iuUkCm-ZQw&amp;s" /></p>
+<p><img
+src="https://i.pinimg.com/736x/90/e2/83/90e28301fae453113b8468da7e47e6fa.jpg" /></p>
+</div>
+<div id="manoban-technicolor-squirrel" class="section level2"
+number="4">
+<h2><span class="header-section-number">4</span> Manoban Technicolor
+Squirrel</h2>
+<p>While the “Manoban Technicolor Squirrel” isn’t a scientifically
+recognized species, it is almost certainly a reference to the
+breathtaking Malabar Giant Squirrel (Ratufa indica). Often called the
+“technicolor” squirrel due to its surreal appearance, this Indian native
+features a coat of deep maroon, purple, orange, and cream. These giants
+can grow up to three feet long from nose to tail and are strictly
+arboreal, leaping up to 20 feet between tree limbs in the upper
+canopy.</p>
+<p>These squirrels are solitary creatures that only come together for
+mating, spending the rest of their time building multiple globular
+nests, or “dreys,” high in the trees for safety. Their vibrant colors
+aren’t just for show; in the dappled sunlight and deep shadows of the
+tropical forest, these bold hues actually help break up their
+silhouette, protecting them from predators like leopards and crested
+serpent eagles. Their presence is often announced by a loud, rattling
+call that echoes through the forest, a stark contrast to their otherwise
+silent, ghost-like movements through the treetops.</p>
+<p><img
+src="https://www.treehugger.com/thmb/mcnWc3fGPqzooeRU6r7wNJkr8Pk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__mnn__images__2018__12__IndianGiantSquirrelTreeEatingBright_socialpromo-d2d897674a534c578885c9a2b49cc16b.jpg" /></p>
+<div class="float">
+<img
+src="https://critter.science/wp-content/uploads/2020/11/igs1-986x520.png"
+alt="He’s splooting" />
+<div class="figcaption">He’s splooting</div>
+</div>
+</div>
+<div id="eastern-gray-squirrel" class="section level2" number="5">
+<h2><span class="header-section-number">5</span> Eastern Gray
+Squirrel</h2>
+<p>The Eastern Gray Squirrel is perhaps the most iconic and adaptable
+squirrel in North America. Known for its bushy tail and acrobatic
+antics, it has successfully transitioned from ancient hardwood forests
+to the heart of major metropolitan cities. These squirrels are
+“scatter-hoarders,” meaning they bury thousands of individual nuts and
+seeds across a wide area to prepare for winter. This behavior requires a
+sophisticated level of spatial memory to relocate their caches months
+later, even under a layer of snow.</p>
+<p>Interestingly, this squirrel plays a vital role in the health of the
+environment through its “forgotten” food. While they have an impressive
+success rate in finding their stashed nuts, they inevitably lose track
+of a small percentage; this unintentional gardening makes them one of
+the most important contributors to forest regeneration, as those
+forgotten acorns and hickory nuts grow into the next generation of
+trees. Their ability to thrive in human-dominated landscapes has made
+them a global symbol of urban wildlife, showcasing a remarkable ability
+to coexist with people.</p>
+<p><img
+src="https://www.aces.edu/wp-content/uploads/2020/10/shutterstock_325982654-scaled.jpg" /></p>
+<p><img
+src="https://images.squarespace-cdn.com/content/v1/5ff668829df92c692e8eb33a/bff6f529-cc31-4d05-9266-1486313a3dfe/470606681_920344250198638_5527151514120130139_n.jpg" /></p>
+</div>
+<div id="black-squirrels" class="section level2" number="6">
+<h2><span class="header-section-number">6</span> Black Squirrels</h2>
+<p>The Black Squirrel is not a distinct species, but rather a melanistic
+subgroup of either the Eastern Gray Squirrel or the Fox Squirrel. This
+striking jet-black coloration is the result of a specific genetic
+mutation—specifically a pigment gene that was likely passed down through
+interbreeding between the two species long ago. While they appear quite
+different, they behave identically to their gray-furred siblings and are
+often seen living and foraging within the same social groups.</p>
+<p>In many regions, particularly in the Northern United States and
+Canada, Black Squirrels hold a distinct advantage. Their dark fur
+absorbs more solar radiation, helping them maintain a higher body
+temperature during brutal winter months compared to gray squirrels. This
+thermal advantage, combined with their ability to blend into the deep
+shadows of dense forests, has allowed their populations to thrive in
+specific pockets, often becoming the dominant color variant in urban
+areas like Kent, Ohio, or parts of Ontario.</p>
+<p><img
+src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Black_squirrel_in_Santa_Clara_CA.jpg" /></p>
+<p><img
+src="https://i.guim.co.uk/img/media/4da0dcdfe4fbe17b0a462b373f96b261138d9cab/0_69_640_384/master/640.jpg?width=1200&amp;height=1200&amp;quality=85&amp;auto=format&amp;fit=crop&amp;s=11943bf0bfedf3c65b2924dc024da3c3" /></p>
+</div>
+<div id="red-squirrels" class="section level2" number="7">
+<h2><span class="header-section-number">7</span> Red Squirrels</h2>
+<p>Red Squirrels are often much smaller and more territorial than their
+gray counterparts. Whether referring to the Eurasian Red Squirrel or the
+American Red Squirrel, these rodents are characterized by their deep
+rust-colored fur, white underbellies, and tufted ears. Unlike the more
+social gray squirrels, Red Squirrels are famously vocal and defensive;
+they will often “bark” or chatter loudly from a high branch to warn
+intruders—human or animal—away from their established territory.</p>
+<p>One of the most fascinating aspects of the Red Squirrel is its
+reliance on a “midden.” Instead of scattering their nuts in thousands of
+different locations, they create centralized stockpiles, often located
+at the base of a tree or inside a hollow log. These middens can grow to
+be several feet wide as generations of squirrels add to the pile.
+Because they rely so heavily on conifer seeds, they are primary
+indicators of forest health, and their specialized diet makes them
+essential to the ecosystems of pine and spruce forests across the
+Northern Hemisphere.</p>
+<p><img
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC8ZkZ7FIIQ3fReKDh5YfSWsc2OorZ96PVBA&amp;s" /></p>
+<p><img
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2VhChFEnsOZfUDFlmfsmT3TvOKoUb98z1fg&amp;s" /></p>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -337,6 +662,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

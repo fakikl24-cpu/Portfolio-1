@@ -1,5 +1,133 @@
 ---
-title: "Portfolio 8"
+title: 'Squirrel'
+author: "Kryschelle Fakir"
+date: "2026-05-05"
+output: 
+  html_document:
+    toc: true
+    number_sections: true 
+    toc_float: true
+    theme: lumen
 ---
 
-> The projects should be numbered consecutively (i.e., in the order in which you began them), and should include for each project a description of the goal, the product (computer program, hand graph, computer graph, etc.), the data, and some interpretation. Reports must be reproducible and of high quality in terms of writing, grammar, presentation, etc.
+```{r load-packages, message=FALSE}
+
+library(tufte)
+library(tidyverse)
+library(dplyr)
+
+```
+
+## Introduction to Squirrels 
+
+Squirrels are really really cute. I'm the biggest fan of squirrels because they make me obscenely happy. Their little faces and the way they hold their hands when they eat make them so precious. I often see them around my house, around campus, and around parks and they serve as a constant breath of fresh air amidst all of the technology I interact with on a day to day basis. Squirrels are also really important for the environment. They act as pollinators because when they eat nectar or pollen it gets allll over their fur and then they run around spreading the pollen to other flowers. They also aid in replanting trees. They sometimes forget where they left their acorns and those acorns become trees!
+
+Squirrels are pivotal to the ecosystem and our neighborhoods. They're also biologically fascinating! Their tail prevents them from falling (most of time time) and they can land right on their feet by using their tail to right themselves mid-air. This is a feature present in tree-squirrels but not rock or ground squirrels since rock and ground squirrels do not need to climb as high and are, thus, not in as much danger of falling from extreme heights. 
+
+They're also incredibly smart! Squirrels have been noted to complete puzzles for rewards, similar to rats and crows. 
+
+[Click Here to Watch!](https://www.youtube.com/watch?v=hFZFjoX2cGg)
+
+While many hate squirrels (see r/fatsquirrelhate) for eating from their bird feeders and gardens, and while many hunt squirrels for food or sport, they are being recognized for their cuteness and even serve as pets to some. 
+
+Historically, squirrels actually were kept as pets. In fact, [Benjamin Franklin kept a pet squirrel](https://www.atlasobscura.com/articles/pet-squirrel-craze) whom was so beloved by Franklin that he wrote a poem for him after he passed. Squirrels can even be found in antique paintings. 
+
+Nowadays, however, they are not fully suitable to be indoor pets due to their hyperactivity and mannerisms. In some cases, however, baby squirrels will be rescued by a good samaritan and nursed back to health before be released back into the wild. In other cases, these squirrels cannot be released and must be kept to maintain their health. Below is a list of such squirrels:
+
+### Famous Squirrels 
+
++ Thumbelina 
+
+Thumbelina has a thyriod issue that makes her gain weight. She enjoys avocados, laying in a dryer full of clothes(while the dryer is off, of course), and hanging out with her friends (stuffed animals). She **hates** frogs and will warn her mom and dad about the impendeing doom that is a tiny tiny frog. Plus, her mom sounds like tiny belcher (I use mom and dad as substitues for owners cause that's a whole child with human-like vet bills)
+
+<center>
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR40QJN0Sbv87rQ0C5NdSZUNew3UVWmXV7wWA&s)
+</center>
+
++ Eve 
+
+Eve is an 8 year old Eastern Gray Squirrel that loves hugging her mom's hands and munching on daffodils. She has a cat tree all to herself. We love Eve. 
+
+<center>
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ2OL6xcE34QfoJmniFvIFndrG1ht-ofU3MA&s)
+</center>
+
++ Emma 
+
+Emma is a wild squirrel that is often captured on camera on an account called "squirrel_boxes" on instagram (and maybe Tiktok). Her most viral videos include clutching her heart after she was started awake from a loud sound. She is a mother and can often be seen snuggling with her babies in the squirrel box. She uses the squirrel box as her home and is beloved by so many, including me. 
+
+<center>
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5DBrKALJVVf6q2eZfb6SRIZqsdYpXDH467Q&s)
+</center>
+
++ Fern
+
+Fern was rescued in 2021 after a storm blew her out of the nest. She has two younger squirrel siblings, Sweet Potato and Walnut. As the oldest of three, she loves taking naps and enjoying her alone time. 
+
+<center>
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfubDReEW_3NACAsnvmWIy0k6M4Hug7GzfzQ&s)
+</center>
+
+While squirrels are a nuisance to many, it is my hope that they can be appreciated for their cuteness, their silly antics, their importance to the environment, and for their complexity. 
+
+There exists quite a few types of squirrels around the world. I have included only a subset of such squirrels here. 
+
+## Rock Squirrels 
+
+The Rock Squirrel is a rugged, ground-dwelling member of the squirrel family commonly found throughout the Southwestern United States and Mexico. Unlike their tree-climbing relatives, these squirrels are primarily at home in rocky canyons, cliffs, and boulder fields where their mottled grayish-brown fur provides near-perfect camouflage against the stone. They are one of the largest species in the Sciuridae family and are known for their semi-fossorial lifestyle, often digging complex burrow systems beneath rocks to avoid predators and the desert heat.
+
+Beyond their burrowing habits, Rock Squirrels are surprisingly agile and can climb trees or cacti when food is scarce on the ground. They are opportunistic foragers with a diverse diet that includes seeds, fruit, and agave, but they are also known to scavenge for insects and occasionally small vertebrates. During the hottest parts of the year, they may enter a state of estivation (summer dormancy), and in colder high-altitude regions, they hibernate through the winter, making them highly resilient to the extreme temperature fluctuations of the desert.
+
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC07yNzQ8BJFw2rdBYwq3vfQNsw5KY4PP5fw&s)
+
+![](https://www.worldlifeexpectancy.com//images/a/w/b/otospermophilus-variegatus/otospermophilus-variegatus.webp)
+
+## Tufted Pygmy Squirrel 
+
+Hidden within the dense rainforests of Borneo, the Tufted Pygmy Squirrel is a miniature marvel of evolution. As one of the smallest squirrel species on the planet, it is often no larger than a human palm and weighs less than an ounce. They are best known for the distinct, elongated tufts of white hair that sprout from the tips of their ears, though the exact biological purpose of these tufts remains a mystery. These tiny rodents are incredibly fast and agile, spending their lives spiraling up and down tree trunks with jerky, lightning-fast movements.
+
+Unlike many larger squirrels that feast on bulky nuts, the Tufted Pygmy Squirrel has a specialized diet consisting mainly of moss, bark, and lichen found on the surface of tropical trees. Their small size allows them to occupy a unique ecological niche, navigating thin branches and crevices that larger predators cannot reach. Because of their shy nature and the thick canopy they inhabit, they are rarely seen by humans, remaining one of the more elusive and enchanting residents of the Southeast Asian rainforests.
+
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_rpIN4CYO89VB5VIBCAqYSSa1iuUkCm-ZQw&s)
+
+![](https://i.pinimg.com/736x/90/e2/83/90e28301fae453113b8468da7e47e6fa.jpg)
+
+## Manoban Technicolor Squirrel 
+
+While the "Manoban Technicolor Squirrel" isn’t a scientifically recognized species, it is almost certainly a reference to the breathtaking Malabar Giant Squirrel (Ratufa indica). Often called the "technicolor" squirrel due to its surreal appearance, this Indian native features a coat of deep maroon, purple, orange, and cream. These giants can grow up to three feet long from nose to tail and are strictly arboreal, leaping up to 20 feet between tree limbs in the upper canopy.
+
+These squirrels are solitary creatures that only come together for mating, spending the rest of their time building multiple globular nests, or "dreys," high in the trees for safety. Their vibrant colors aren't just for show; in the dappled sunlight and deep shadows of the tropical forest, these bold hues actually help break up their silhouette, protecting them from predators like leopards and crested serpent eagles. Their presence is often announced by a loud, rattling call that echoes through the forest, a stark contrast to their otherwise silent, ghost-like movements through the treetops.
+
+![](https://www.treehugger.com/thmb/mcnWc3fGPqzooeRU6r7wNJkr8Pk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__mnn__images__2018__12__IndianGiantSquirrelTreeEatingBright_socialpromo-d2d897674a534c578885c9a2b49cc16b.jpg)
+
+![He's splooting](https://critter.science/wp-content/uploads/2020/11/igs1-986x520.png)
+
+## Eastern Gray Squirrel 
+
+The Eastern Gray Squirrel is perhaps the most iconic and adaptable squirrel in North America. Known for its bushy tail and acrobatic antics, it has successfully transitioned from ancient hardwood forests to the heart of major metropolitan cities. These squirrels are "scatter-hoarders," meaning they bury thousands of individual nuts and seeds across a wide area to prepare for winter. This behavior requires a sophisticated level of spatial memory to relocate their caches months later, even under a layer of snow.
+
+Interestingly, this squirrel plays a vital role in the health of the environment through its "forgotten" food. While they have an impressive success rate in finding their stashed nuts, they inevitably lose track of a small percentage; this unintentional gardening makes them one of the most important contributors to forest regeneration, as those forgotten acorns and hickory nuts grow into the next generation of trees. Their ability to thrive in human-dominated landscapes has made them a global symbol of urban wildlife, showcasing a remarkable ability to coexist with people.
+
+![](https://www.aces.edu/wp-content/uploads/2020/10/shutterstock_325982654-scaled.jpg)
+
+![](https://images.squarespace-cdn.com/content/v1/5ff668829df92c692e8eb33a/bff6f529-cc31-4d05-9266-1486313a3dfe/470606681_920344250198638_5527151514120130139_n.jpg)
+
+## Black Squirrels 
+
+The Black Squirrel is not a distinct species, but rather a melanistic subgroup of either the Eastern Gray Squirrel or the Fox Squirrel. This striking jet-black coloration is the result of a specific genetic mutation—specifically a pigment gene that was likely passed down through interbreeding between the two species long ago. While they appear quite different, they behave identically to their gray-furred siblings and are often seen living and foraging within the same social groups.
+
+In many regions, particularly in the Northern United States and Canada, Black Squirrels hold a distinct advantage. Their dark fur absorbs more solar radiation, helping them maintain a higher body temperature during brutal winter months compared to gray squirrels. This thermal advantage, combined with their ability to blend into the deep shadows of dense forests, has allowed their populations to thrive in specific pockets, often becoming the dominant color variant in urban areas like Kent, Ohio, or parts of Ontario.
+
+![](https://upload.wikimedia.org/wikipedia/commons/a/a1/Black_squirrel_in_Santa_Clara_CA.jpg)
+
+![](https://i.guim.co.uk/img/media/4da0dcdfe4fbe17b0a462b373f96b261138d9cab/0_69_640_384/master/640.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=11943bf0bfedf3c65b2924dc024da3c3)
+
+## Red Squirrels 
+
+Red Squirrels are often much smaller and more territorial than their gray counterparts. Whether referring to the Eurasian Red Squirrel or the American Red Squirrel, these rodents are characterized by their deep rust-colored fur, white underbellies, and tufted ears. Unlike the more social gray squirrels, Red Squirrels are famously vocal and defensive; they will often "bark" or chatter loudly from a high branch to warn intruders—human or animal—away from their established territory.
+
+One of the most fascinating aspects of the Red Squirrel is its reliance on a "midden." Instead of scattering their nuts in thousands of different locations, they create centralized stockpiles, often located at the base of a tree or inside a hollow log. These middens can grow to be several feet wide as generations of squirrels add to the pile. Because they rely so heavily on conifer seeds, they are primary indicators of forest health, and their specialized diet makes them essential to the ecosystems of pine and spruce forests across the Northern Hemisphere.
+
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC8ZkZ7FIIQ3fReKDh5YfSWsc2OorZ96PVBA&s)
+
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2VhChFEnsOZfUDFlmfsmT3TvOKoUb98z1fg&s)
