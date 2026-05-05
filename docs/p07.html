@@ -11,7 +11,7 @@
 
 
 
-<title>Portfolio 7</title>
+<title>Age, Accuracy, and Juvenile Offenses</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,18 +290,189 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 7</h1>
+<h1 class="title toc-ignore">Age, Accuracy, and Juvenile Offenses</h1>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<p>For this portfolio piece, I really want to expand on Lab 9. I’m
+especially interested in plotting some more of the variables that we
+weren’t able to examine there. While I don’t have specific hypotheses, I
+do want to practice visualizing comparisons between groups.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.6
+## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+## ✔ ggplot2   4.0.1     ✔ tibble    3.3.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.1     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(fairness)</code></pre>
+<pre><code>## Warning: package &#39;fairness&#39; was built under R version 4.5.3</code></pre>
+<pre class="r"><code>library(janitor)</code></pre>
+<pre><code>## Warning: package &#39;janitor&#39; was built under R version 4.5.3</code></pre>
+<pre><code>## 
+## Attaching package: &#39;janitor&#39;
+## 
+## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     chisq.test, fisher.test</code></pre>
+<pre class="r"><code>library(readr)
+
+
+compas &lt;- read_csv(&quot;compas-scores-2-years.csv&quot;) %&gt;%
+  clean_names() %&gt;%
+  rename(
+    decile_score = decile_score_12,
+    priors_count = priors_count_15
+  )</code></pre>
+<pre><code>## New names:
+## Rows: 7214 Columns: 53
+## ── Column specification
+## ──────────────────────────────────────────────────────── Delimiter: &quot;,&quot; chr
+## (19): name, first, last, sex, age_cat, race, c_case_number, c_charge_de... dbl
+## (19): id, age, juv_fel_count, decile_score...12, juv_misd_count, juv_ot... lgl
+## (1): violent_recid dttm (2): c_jail_in, c_jail_out date (12):
+## compas_screening_date, dob, c_offense_date, c_arrest_date, r_offe...
+## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## • `decile_score` -&gt; `decile_score...12`
+## • `priors_count` -&gt; `priors_count...15`
+## • `decile_score` -&gt; `decile_score...40`
+## • `priors_count` -&gt; `priors_count...49`</code></pre>
+<p>To begin, I’ll plot the demographics to re-orient myself to the
+pattern of the data.</p>
+<pre class="r"><code>ggplot(compas, aes(x = race)) +
+  geom_bar()</code></pre>
+<p><img src="p07_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" /></p>
+<pre class="r"><code>ggplot(compas, aes(x = sex)) +
+  geom_bar()</code></pre>
+<p><img src="p07_files/figure-html/unnamed-chunk-2-2.png" alt="" width="672" /></p>
+<pre class="r"><code>ggplot(compas, aes(x = age)) +
+  geom_bar()</code></pre>
+<p><img src="p07_files/figure-html/unnamed-chunk-2-3.png" alt="" width="672" /></p>
+<p>I didn’t note this before but the distribution of the data shows that
+a lot of younger individuals are present in the data but there is
+someone who is approaching 100 years old. Because of this outlier, I
+think it would be interesting to see the relationship between age and
+compas risk score. Are younger people more likely to be rated as higher
+risk? Is the algorithm more accurate for younger individuals.</p>
+<p>To begin, I again need to replicate the accuracy scores from Lab
+9.</p>
+<pre class="r"><code>compas &lt;- compas %&gt;% 
+  mutate(classification = case_when(
+    decile_score &gt;= 7 &amp; two_year_recid == 1 ~ &quot;TP&quot;, 
+             decile_score &lt;= 4 &amp; two_year_recid == 0 ~ &quot;TN&quot;, 
+             decile_score &gt;= 7 &amp; two_year_recid == 0 ~ &quot;FP&quot;, 
+             decile_score &lt;= 4 &amp; two_year_recid == 1 ~ &quot;FN&quot;)
+  )
+
+results &lt;- table(compas$classification)
+print(results)</code></pre>
+<pre><code>## 
+##   FN   FP   TN   TP 
+## 1216  644 2681 1351</code></pre>
+<pre class="r"><code>correct &lt;- results[&quot;TP&quot;] + results[&quot;TN&quot;]
+cases &lt;- results[&quot;TP&quot;] + results[&quot;TN&quot;] + results[&quot;FP&quot;] + results[&quot;FN&quot;]</code></pre>
+<p>Now, I want to plot the relationship between age and decile
+score.</p>
+<pre class="r"><code>ggplot(compas, aes(x = age, y = decile_score)) +
+  geom_jitter(alpha = 0.2, color = &quot;steelblue&quot;) +   geom_smooth(method = &quot;lm&quot;, color = &quot;red&quot;) + 
+  labs(
+    title = &quot;The Relationship between COMPAS Score and Age&quot;,
+    subtitle = &quot;Red line shows the general trend&quot;,
+    y = &quot;Decile Score&quot;,
+    x = &quot;Age&quot;
+  ) +
+  theme_minimal()</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p07_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" /></p>
+<p>From the graph, it’s clear that there’s a negative relationship
+between age and compas scores such that greater risk scores are
+associated with younger individuals.</p>
+<p>Now, I aim to compare the accuracy of the algorithm for younger
+individuals and older individuals. To do so, I’ll first need to
+determine what is younger and what is older. I could do this one of two
+ways; I could make two large bins including a younger group and an older
+group or I could make three groups which will include a younger group, a
+middle age group, and an older group. I would arguably like to pursue
+the second option because the first option would require me to join 20
+year olds with almost 40 year olds. The maturity gap is much too large
+for that to be a reasonable choice. As such, I’ll designate anyone 30
+and younger into the ‘Younger’ group, anyone from 31 to 60 into the
+‘Middle Age’ group and everyone 61 years old and older into the ‘Older’
+group.</p>
+<pre class="r"><code>compas &lt;- compas %&gt;%
+  mutate(age_group = case_when(
+    age &lt;= 30 ~ &quot;Younger&quot;,
+    age &gt;= 31 &amp; age &lt;= 60 ~ &quot;Middle Age&quot;,
+    age &gt;= 61 ~ &quot;Older&quot;
+  ))
+
+table(compas$age_group)</code></pre>
+<pre><code>## 
+## Middle Age      Older    Younger 
+##       3611        230       3373</code></pre>
+<p>Due to the nature of the sample, there are less individuals in the
+older group than the Middle Age and Younger groups. Regardless, we can
+now examine the differences in accuracy across age groups.</p>
+<pre class="r"><code>age_accuracy_summary &lt;- compas %&gt;%
+  group_by(age_group) %&gt;%
+  summarize(
+    correct = sum(classification %in% c(&quot;TP&quot;, &quot;TN&quot;)),
+    total = n(),
+    accuracy_pct = (correct / total) * 100
+  )
+
+ggplot(age_accuracy_summary, aes(x = age_group, y = accuracy_pct, fill = age_group)) +
+  geom_col() +
+  geom_text(aes(label = paste0(round(accuracy_pct, 1), &quot;%&quot;)), vjust = -0.5) +
+  labs(
+    title = &quot;COMPAS Accuracy Across Age Groups&quot;,
+    subtitle = &quot;Percentage of correct predictions (TP + TN) / Total&quot;,
+    x = &quot;Age Group&quot;,
+    y = &quot;Accuracy (%)&quot;
+  ) +
+  ylim(0, 100) +
+  theme_minimal() +
+  scale_fill_brewer(palette = &quot;Pastel1&quot;) +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="p07_files/figure-html/unnamed-chunk-6-1.png" alt="" width="672" /></p>
+<p>From the results, it’s clear that accuracy was highest for older
+individuals than for younger individuals, despite having less cases
+present in the data. It is possible that younger individuals are viewed
+as higher risk because of a lack of maturity but there may also be more
+information on older individuals in the system (that contributes to
+compas scores) that makes predicting recividism more accurate than
+younger and middle age counterparts.</p>
+<p>Beyond some of the work done for lab 9, I also wanted to examine some
+other variables that were not included in lab 9. Specifically I’d like
+to look at juvenile crimes. To do so, I need to make another, younger,
+age group that accounts for only individuals under 18. Then I’ll make a
+graph looking at number of juvenile felonies, number of juvenile
+misdemeanors, and number of other juvenile offenses.</p>
+<pre class="r"><code>compas_18 &lt;- compas %&gt;%
+  mutate(age_group = factor(case_when(
+    age &lt; 18                ~ &quot;Under 18&quot;)))
+
+compas_18 %&gt;%
+  select(juv_fel_count, juv_misd_count, juv_other_count) %&gt;%
+  pivot_longer(cols = everything(), names_to = &quot;offense_type&quot;, values_to = &quot;count&quot;) %&gt;%
+  
+  ggplot(aes(x = count, fill = offense_type)) +
+  geom_bar(show.legend = FALSE) +
+  facet_wrap(~ offense_type) +
+  ylim(0, 100) +
+  labs(title = &quot;Juvenile Offense Distributions&quot;, x = &quot;Number of Offenses&quot;) +
+  theme_minimal()</code></pre>
+<pre><code>## Warning: Removed 6 rows containing missing values or values outside the scale range
+## (`geom_bar()`).</code></pre>
+<p><img src="p07_files/figure-html/unnamed-chunk-7-1.png" alt="" width="672" /></p>
+<p>These graphs show that most juveniles engaged in offenses that did
+not fall into the misdemeanor or felony categories.</p>
 
 
 
