@@ -1,5 +1,5 @@
 ---
-title: "Project Sekai Data Cleaning and Graphing"
+title: "Project Sekai Data Cleaning and Prelim Graphing"
 author: "Kryschelle Fakir"
 date: "2026-05-05"
 output: 
@@ -9,12 +9,16 @@ output:
 
 For this project, I got some data from the Wiki from one of my favorite mobile games. I tried webscraping but that simply did not work. 
 
+Some necessary background: Project sekai is a rhythm game that features a gacha based card system where you use in-game currency (which can be bought with real money) to 'roll' for cards. Often, you'll 'roll' on a specific banner. Some of these cards are limited, some are tied to a story event, it all depends. There's a lot that goes into the actual rhythm game system as these cards can be used to buff your performance during the rhythm game. It's truly neat. 
+
+The story of the game is that you, the player, are 'watching' over mini worlds (sekai means world in Japanese) with have characters undergoing certain challenges in their lives together. The Virtual Singers (the original vocaloids) serve as guides for these characters as they navigate real world challenges. It's a blast to play and I would recommend it for anyone who loves rhythm games. 
+
 For this piece, my goal is to clean the data to make it usable for my final portfolio piece. I would also like to run some preliminary graphs to calculate how many cards exist for each character and group. I want to see if there are discrepancies and if some characters are more highly favored than others.
 
 + Name: Name of the card 
 + Unit/Group: Name of the group
   + Vivid Bad Squad
-    + Azusawa Kohane
+    + Azusawa Kohane ![](https://static.wikia.nocookie.net/projectsekai/images/b/b4/Azusawa_Kohane_chibi.png/revision/latest?cb=20230922154656)
     + Shiraishi An  
     + Shinonome Akito  
     + Aoyagi Toya
@@ -98,8 +102,6 @@ df_cleaned <- pjsk_csv %>%
     )
   )
 
-library(tidyverse)
-
 colnames(df_cleaned) <- tolower(trimws(colnames(df_cleaned)))
 
 print(colnames(df_cleaned))
@@ -126,10 +128,10 @@ pjsk_colors <- c(
 char_colors <- c(
   # Leo/need
   "Ichika Hoshino" = "#33aaee", "Saki Tenma" = "#ffdd44", 
-  "Honami Mochizuki" = "#ff66bb", "Shiho Hinomori" = "#bbdd22",
+  "Honami Mochizuki" = "#ff66bb", "Shiho Honomori" = "#bbdd22",
   
   # MORE MORE JUMP!
-  "Minori Hanasato" = "#ff88dd", "Haruka Kiritani" = "#99ccff", 
+  "Minori Hanasato" = "#ffccaa", "Haruka Kiritani" = "#99ccff", 
   "Airi Momoi" = "#ffaaff", "Shizuku Hinomori" = "#99ffdd",
   
   # Vivid BAD SQUAD

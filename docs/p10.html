@@ -9,14 +9,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Kryschelle Fakir" />
 
+<meta name="date" content="2026-05-06" />
 
-<title>Portfolio 10</title>
+<title>PJSK Visualizations</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -290,109 +292,299 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 10</h1>
+<h1 class="title toc-ignore">PJSK Visualizations</h1>
+<h4 class="author">Kryschelle Fakir</h4>
+<h4 class="date">2026-05-06</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-hendrerit purus ut dapibus vestibulum. Suspendisse potenti. Cras
-faucibus mauris in leo condimentum lobortis. Cras euismod sollicitudin
-augue, ut venenatis quam placerat eu. Maecenas vulputate rhoncus odio,
-in interdum risus malesuada gravida. Maecenas cursus sed dui sit amet
-lacinia. Nunc dignissim metus nec ex mattis, non rutrum urna cursus.
-Morbi pretium elementum purus, in aliquet libero eleifend ac. Nam
-finibus, ligula sed ultrices pharetra, tellus risus consequat tortor,
-facilisis maximus elit lectus a metus. Sed vel dictum nulla, vitae
-blandit turpis. Integer pulvinar tempor diam ac venenatis. Vestibulum
-est lacus, suscipit et ipsum nec, consectetur iaculis leo. Morbi libero
-lacus, scelerisque non sollicitudin vitae, accumsan sed tellus.
-Suspendisse quis orci tellus.</p>
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting
-syntax for authoring HTML, PDF, and MS Word documents. For more details
-on using R Markdown see <a href="http://rmarkdown.rstudio.com"
-class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be
-generated that includes both content as well as the output of any
-embedded R code chunks within the document. You can embed an R code
-chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
-<p>Maecenas luctus convallis efficitur. Vestibulum pharetra laoreet nibh
-non congue. Etiam ornare, neque sit amet condimentum aliquet, odio ipsum
-porttitor elit, eu malesuada turpis augue sit amet arcu. Integer nec
-quam et massa congue tincidunt. Donec sit amet diam placerat, pharetra
-quam nec, ornare nisl. Quisque erat turpis, imperdiet eget tellus non,
-interdum ultricies nisi. Fusce a erat est. Nunc sollicitudin ante non
-eros vulputate, sed eleifend nulla hendrerit. Nam ac quam nulla.
-Praesent a ligula a justo auctor tristique ac vel neque. Class aptent
-taciti sociosqu ad litora torquent per conubia nostra, per inceptos
-himenaeos. Quisque tempor felis sed lorem efficitur volutpat. Aliquam
-lectus diam, lacinia vitae velit eget, pulvinar porta massa. Curabitur
-nec egestas mi.</p>
+<p>This final piece is an extension of portfolio 9. In this piece, I
+focus more on the visualization rather than the data cleaning. I’ll be
+examining the prevalence of event cards and card rarity for each group
+and for each character. Please enjoy!</p>
+<div id="data-from-portfolio-9" class="section level2">
+<h2>Data from Portfolio 9</h2>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.5.3</code></pre>
+<pre class="r"><code>library(tidytext) </code></pre>
+<pre><code>## Warning: package &#39;tidytext&#39; was built under R version 4.5.3</code></pre>
+<pre class="r"><code>library(readxl)
+
+pjsk_csv &lt;- read_excel(&quot;pjsk.csv.xlsx&quot;)
+
+df_cleaned &lt;- pjsk_csv %&gt;%
+  mutate(
+    rarity_numeric = case_when(
+      str_detect(Rarity, &quot;🎀&quot;) ~ 4,
+      TRUE ~ as.numeric(str_count(Rarity, &quot;⭐&quot;))
+    ),
+      has_costume = case_when(
+      is.na(Costume) | Costume == &quot;&quot; | Costume == &quot;None&quot; | Costume == &quot;-&quot; ~ &quot;Not Present&quot;,
+      TRUE ~ &quot;Present&quot;
+    ),
+    
+    is_event_card = case_when(
+      is.na(Event) | Event == &quot;&quot; | Event == &quot;None&quot; | Event == &quot;-&quot; ~ &quot;No&quot;,
+      TRUE ~ &quot;Yes&quot;
+    )
+  )
+
+colnames(df_cleaned) &lt;- tolower(trimws(colnames(df_cleaned)))
+
+print(colnames(df_cleaned))</code></pre>
+<pre><code>##  [1] &quot;name&quot;           &quot;group&quot;          &quot;character&quot;      &quot;type&quot;          
+##  [5] &quot;rarity&quot;         &quot;availability&quot;   &quot;skill type&quot;     &quot;date&quot;          
+##  [9] &quot;event&quot;          &quot;costume&quot;        &quot;rarity_numeric&quot; &quot;has_costume&quot;   
+## [13] &quot;is_event_card&quot;</code></pre>
+<pre class="r"><code>df_cleaned &lt;- df_cleaned %&gt;% 
+  rename(unit = &quot;group&quot;)
+
+
+pjsk_colors &lt;- c(
+  &quot;Leo/need&quot; = &quot;#4455dd&quot;,           # Deep Blue
+  &quot;MORE MORE JUMP!&quot; = &quot;#88dd22&quot;,    # Bright Green
+  &quot;Vivid BAD SQUAD&quot; = &quot;#ee1166&quot;,    # Vivid Pink/Red
+  &quot;Wonderlands×Showtime&quot; = &quot;#ff9900&quot;, # Orange
+  &quot;Nightcord at 25:00&quot; = &quot;#884499&quot;, # Dark Purple
+  &quot;Virtual Singer&quot; = &quot;#33ccbb&quot;      # Teal/Miku Blue
+)
+
+char_colors &lt;- c(
+  # Leo/need
+  &quot;Ichika Hoshino&quot; = &quot;#33aaee&quot;, &quot;Saki Tenma&quot; = &quot;#ffdd44&quot;, 
+  &quot;Honami Mochizuki&quot; = &quot;#ff66bb&quot;, &quot;Shiho Honomori&quot; = &quot;#bbdd22&quot;,
+  
+  # MORE MORE JUMP!
+  &quot;Minori Hanasato&quot; = &quot;#ffccaa&quot;, &quot;Haruka Kiritani&quot; = &quot;#99ccff&quot;, 
+  &quot;Airi Momoi&quot; = &quot;#ffaaff&quot;, &quot;Shizuku Hinomori&quot; = &quot;#99ffdd&quot;,
+  
+  # Vivid BAD SQUAD
+  &quot;Kohane Azusawa&quot; = &quot;#ff66aa&quot;, &quot;An Shiraishi&quot; = &quot;#0066ee&quot;, 
+  &quot;Akito Shinonome&quot; = &quot;#ff7722&quot;, &quot;Toya Aoyagi&quot; = &quot;#0077dd&quot;,
+  
+  # Wonderlands×Showtime
+  &quot;Tsukasa Tenma&quot; = &quot;#ffbb00&quot;, &quot;Emu Otori&quot; = &quot;#ff66cc&quot;, 
+  &quot;Nene Kusanagi&quot; = &quot;#33dd99&quot;, &quot;Rui Kamishiro&quot; = &quot;#bb88ff&quot;,
+  
+  # 25-ji, Nightcord de.
+  &quot;Kanade Yoisaki&quot; = &quot;#bb6688&quot;, &quot;Mafuyu Asahina&quot; = &quot;#8888cc&quot;, 
+  &quot;Ena Shinonome&quot; = &quot;#ccaa88&quot;, &quot;Mizuki Akiyama&quot; = &quot;#e4a8ca&quot;,
+    &quot;Hatsune Miku&quot; = &quot;#33ccbb&quot;, &quot;Kagamine Rin&quot; = &quot;#ffcc11&quot;, 
+  &quot;Kagamine Len&quot; = &quot;#ffee11&quot;, &quot;Megurine Luka&quot; = &quot;#ffbbcc&quot;, 
+  &quot;MEIKO&quot; = &quot;#dd4444&quot;, &quot;KAITO&quot; = &quot;#3366cc&quot;
+)</code></pre>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="p10_files/figure-html/pressure-1.png" alt="" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the
-code chunk to prevent printing of the R code that generated the
-plot.</p>
-<p>Morbi tincidunt mollis odio sit amet feugiat. Ut vel risus eu ante
-dictum consequat. Integer et luctus mauris. Donec nec faucibus urna, sed
-commodo risus. Nam elementum pulvinar erat, eget convallis est blandit
-vel. Etiam gravida sapien eu massa hendrerit maximus. Proin dolor quam,
-porta vitae libero non, venenatis porta tellus. Vivamus et elit a est
-aliquet consequat. Proin tempus, purus quis suscipit placerat, dui nunc
-euismod dui, sit amet luctus leo lectus in risus. Phasellus consectetur
-eleifend arcu. Nullam venenatis blandit nulla ut ullamcorper. Vestibulum
-eu arcu quis massa scelerisque sodales in ac augue. Quisque dapibus
-fringilla turpis, ut cursus tortor cursus sed. Sed facilisis quam eget
-neque viverra venenatis. Suspendisse ut lorem nec erat elementum
-bibendum. Curabitur lobortis purus in cursus blandit.</p>
-<p>Aliquam sed ex et lorem consequat feugiat at porta leo. Fusce id
-hendrerit tellus. Maecenas dictum felis neque, quis dictum metus
-tristique eu. Vivamus sed blandit nisl. Integer ut urna dolor. Cras in
-egestas eros, in aliquam nisi. Duis vitae elementum quam. Vivamus vel
-turpis commodo, porttitor urna vitae, viverra sem. Nam nec dignissim
-erat, id viverra libero. Integer vel lectus pellentesque tortor
-fringilla posuere. Vivamus quis magna accumsan, porta tortor at, aliquam
-urna. Aliquam vestibulum ante massa, ut gravida lectus sagittis
-vitae.</p>
-<p>Sed eget ipsum auctor, gravida magna sit amet, tincidunt mi. Nulla
-erat ante, volutpat nec sem eget, luctus posuere est. Praesent convallis
-nunc ac turpis bibendum, in maximus magna convallis. Vestibulum ante
-ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
-Sed sit amet nulla ante. Sed elit sem, lobortis nec nisi a, rhoncus
-ornare nunc. Curabitur ultrices neque feugiat, facilisis magna eu,
-consectetur magna. Mauris id eleifend ex.</p>
-<p>Morbi tincidunt mollis odio sit amet feugiat. Ut vel risus eu ante
-dictum consequat. Integer et luctus mauris. Donec nec faucibus urna, sed
-commodo risus. Nam elementum pulvinar erat, eget convallis est blandit
-vel. Etiam gravida sapien eu massa hendrerit maximus. Proin dolor quam,
-porta vitae libero non, venenatis porta tellus. Vivamus et elit a est
-aliquet consequat. Proin tempus, purus quis suscipit placerat, dui nunc
-euismod dui, sit amet luctus leo lectus in risus. Phasellus consectetur
-eleifend arcu. Nullam venenatis blandit nulla ut ullamcorper. Vestibulum
-eu arcu quis massa scelerisque sodales in ac augue. Quisque dapibus
-fringilla turpis, ut cursus tortor cursus sed. Sed facilisis quam eget
-neque viverra venenatis. Suspendisse ut lorem nec erat elementum
-bibendum. Curabitur lobortis purus in cursus blandit.</p>
+<div id="card-count" class="section level2">
+<h2>Card Count</h2>
+<pre class="r"><code>df_counts &lt;- df_cleaned %&gt;%
+  count(unit, character)
+
+ggplot(df_counts, aes(x = n, 
+                      y = reorder_within(character, n, unit), 
+                      fill = character)) +
+  geom_col() + 
+  scale_y_reordered() + 
+  facet_wrap(~ unit, scales = &quot;free_y&quot;, ncol = 2) + 
+  scale_fill_manual(values = char_colors) +
+  labs(
+    title = &quot;Card Counts per Character (Grouped by Unit)&quot;,
+    subtitle = &quot;Each facet only shows its respective members&quot;,
+    x = &quot;Total Number of Cards&quot;,
+    y = &quot;Character&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = &quot;none&quot;,
+    strip.background = element_rect(fill = &quot;ghostwhite&quot;),
+    strip.text = element_text(face = &quot;bold&quot;, size = 10),
+    panel.spacing = unit(1.5, &quot;lines&quot;)
+  )</code></pre>
+<p><img src="p10_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" />
+While this visualization is good, it’s slightly off. I believe this is
+because of the Virtual Singers being apart of the subunits. To fix this,
+I’ll remove them and keep only the non-unit virtual singers. To do this,
+I need to make sure I get all of the names correct so I begin by
+selecting only the unique group names to make sure virtual singers is
+not all uppercase. Then, I’ll make a dataframe that is just comprised of
+the ‘human’ names. Then I’ll specify the virtual singer names. After
+this, I’ll tell R to only keep the names that match the human and
+virtual singers. From there, I just double check to make sure there are
+26 unique character names. I then edit the graph above to reflect the
+changes.</p>
+<pre class="r"><code>print(&quot;Current group names in your data:&quot;)</code></pre>
+<pre><code>## [1] &quot;Current group names in your data:&quot;</code></pre>
+<pre class="r"><code>print(unique(df_cleaned$unit))</code></pre>
+<pre><code>## [1] &quot;Vivid BAD SQUAD&quot;      &quot;MORE MORE JUMP!&quot;      &quot;Wonderlands×Showtime&quot;
+## [4] &quot;Leo/need&quot;             &quot;Virtual Singer&quot;       &quot;Nightcord at 25:00&quot;</code></pre>
+<pre class="r"><code>humans &lt;- c(
+  &quot;Ichika Hoshino&quot;, &quot;Saki Tenma&quot;, &quot;Honami Mochizuki&quot;, &quot;Shiho Honomori&quot;,
+  &quot;Minori Hanasato&quot;, &quot;Haruka Kiritani&quot;, &quot;Airi Momoi&quot;, &quot;Shizuku Hinomori&quot;,
+  &quot;Kohane Azusawa&quot;, &quot;An Shiraishi&quot;, &quot;Akito Shinonome&quot;, &quot;Toya Aoyagi&quot;,
+  &quot;Tsukasa Tenma&quot;, &quot;Emu Otori&quot;, &quot;Nene Kusanagi&quot;, &quot;Rui Kamishiro&quot;,
+  &quot;Kanade Yoisaki&quot;, &quot;Mafuyu Asahina&quot;, &quot;Ena Shinonome&quot;, &quot;Mizuki Akiyama&quot;
+)
+
+vs_names &lt;- c(&quot;Hatsune Miku&quot;, &quot;Kagamine Rin&quot;, &quot;Kagamine Len&quot;, 
+              &quot;Megurine Luka&quot;, &quot;MEIKO&quot;, &quot;KAITO&quot;)
+
+df_final &lt;- df_cleaned %&gt;%
+  filter(
+    (character %in% humans) | 
+    (character %in% vs_names &amp; (unit == &quot;Virtual Singer&quot;))
+  )
+
+print(paste(&quot;Unique characters remaining:&quot;, length(unique(df_final$character))))</code></pre>
+<pre><code>## [1] &quot;Unique characters remaining: 26&quot;</code></pre>
+<pre class="r"><code>print(unique(df_final$character))</code></pre>
+<pre><code>##  [1] &quot;Kohane Azusawa&quot;   &quot;Toya Aoyagi&quot;      &quot;Airi Momoi&quot;       &quot;Minori Hanasato&quot; 
+##  [5] &quot;Haruka Kiritani&quot;  &quot;Shizuku Hinomori&quot; &quot;Tsukasa Tenma&quot;    &quot;Saki Tenma&quot;      
+##  [9] &quot;Emu Otori&quot;        &quot;Nene Kusanagi&quot;    &quot;Rui Kamishiro&quot;    &quot;Hatsune Miku&quot;    
+## [13] &quot;Ena Shinonome&quot;    &quot;Mafuyu Asahina&quot;   &quot;Kanade Yoisaki&quot;   &quot;Mizuki Akiyama&quot;  
+## [17] &quot;An Shiraishi&quot;     &quot;Akito Shinonome&quot;  &quot;Honami Mochizuki&quot; &quot;Megurine Luka&quot;   
+## [21] &quot;Shiho Honomori&quot;   &quot;Ichika Hoshino&quot;   &quot;KAITO&quot;            &quot;Kagamine Rin&quot;    
+## [25] &quot;Kagamine Len&quot;     &quot;MEIKO&quot;</code></pre>
+<pre class="r"><code>df_counts &lt;- df_final %&gt;%
+  count(unit, character)
+
+ggplot(df_counts, aes(x = n, 
+                      y = reorder_within(character, n, unit), 
+                      fill = character)) +
+  geom_col() + 
+  scale_y_reordered() + 
+  facet_wrap(~ unit, scales = &quot;free_y&quot;, ncol = 2) + 
+  scale_fill_manual(values = char_colors) +
+  labs(
+    title = &quot;Card Counts per Character&quot;,
+    subtitle = &quot;Grouped by Unit&quot;,
+    x = &quot;Total Number of Cards&quot;,
+    y = &quot;Character&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = &quot;none&quot;,
+    strip.background = element_rect(fill = &quot;ghostwhite&quot;),
+    strip.text = element_text(face = &quot;bold&quot;, size = 10),
+    panel.spacing = unit(1.5, &quot;lines&quot;)
+  )</code></pre>
+<p><img src="p10_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" /></p>
+<pre class="r"><code>ggplot(df_counts, aes(x = unit, y = n, fill = unit)) +
+  geom_col() +
+  scale_fill_manual(values = pjsk_colors) +
+  theme_minimal() +
+  labs(
+    title = &quot;Card Counts per Group&quot;,
+    x = &quot;Total Number of Cards&quot;,
+    y = &quot;Unit&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = &quot;none&quot;,
+    strip.background = element_rect(fill = &quot;ghostwhite&quot;),
+    strip.text = element_text(face = &quot;bold&quot;, size = 10),
+    panel.spacing = unit(1.5, &quot;lines&quot;)
+  )</code></pre>
+<p><img src="p10_files/figure-html/unnamed-chunk-3-2.png" alt="" width="672" /></p>
+<p>The results of these visualizations show that of the groups, LeoNeed
+has the most cards. This aligns with the results from portfolio 9 where
+Saki Tenma had the most cards of any character. Additionally, of the
+human groups, WonderlandsxShowtime has the least amount of cards.
+Understandably so, the Virtual Singers have way fewer cards than their
+human counterparts.</p>
+<p>In each group, some characters get more cards than others. In
+LeoNeed, Saki Tenma has the most cards with Ichika Hoshino having the
+least. In Nightcord at 25:00 Mafuyu Asahina has slightly more cards than
+Kanade and Ena with Mizuki Akiyama having the least. In Vivid BAD SQUAD,
+Toya Aoyagi and Akito Shinonome are tied for first place with An
+Shiraishi having the fewest of the group. For WXS, Tsukasa Tenma has the
+most cards with Emu Otori having the fewest and for MORE MORE Jump! (my
+favorite group!) Harku Kiritani has the most cards and Minori Hanasato
+(my favorite character) has the least. The virtual singers are
+relatively even with Miku having slightly more than the rest and Len
+having slightly fewer than the rest (I’m still thinking about that
+limited Len card I couldn’t get and I’m deeply upset).</p>
+<p>Overall, it’s clear that there’s no extreme difference between
+characters on card count. However, there are some characters who do get
+more cards than others.</p>
+</div>
+<div id="card-rarity" class="section level2">
+<h2>Card Rarity</h2>
+<p>Next, I want to see the distribution of card rarity for each
+character and group.</p>
+<pre class="r"><code>ggplot(df_cleaned, aes(y = rarity_numeric, fill = unit)) +
+  geom_bar() +
+  scale_fill_manual(values = pjsk_colors) +
+  labs(
+    title = &quot;Prevalence of Card Rarity per Group&quot;,
+    x = &quot;Count&quot;,
+    y = &quot; Card Rarity&quot;
+  ) +
+  theme_minimal() +
+  theme(legend.position = &quot;right&quot;)</code></pre>
+<p><img src="p10_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" /></p>
+<p>It’s clear that, on average, the distribution of card rarity is
+consistent across groups. Virtual singer will always be lowest since
+they’re not the focus of the game but, overall, the pattern appears
+equal. It’s also interesting that there are way more four stars in the
+game despite being the rarest to achieve. This makes sense given that
+project sekai is a gacha game and you want to keep making beautiful
+cards for people to try and get and possibly pay for.</p>
+</div>
+<div id="event-cards" class="section level2">
+<h2>Event Cards</h2>
+<p>Next I want to see if some groups get more events than others. I will
+then examine whether some characters get more events than others, as
+well.</p>
+<pre class="r"><code>ggplot(df_cleaned, aes(y = is_event_card, fill = unit)) +
+  geom_bar() +
+  scale_fill_manual(values = pjsk_colors) +
+  labs(
+    title = &quot;Prevalence of Event Cards per Group&quot;,
+    x = &quot;Count&quot;,
+    y = &quot; Is it an event card?&quot;
+  ) +
+  theme_minimal() +
+  theme(legend.position = &quot;right&quot;)</code></pre>
+<p><img src="p10_files/figure-html/unnamed-chunk-5-1.png" alt="" width="672" /></p>
+<p>Again, the pattern of the data are seemingly equal across groups
+(except for virtual singer, of course). Now for the characters:</p>
+<pre class="r"><code>df_event_counts &lt;- df_final %&gt;%
+  filter(is_event_card == TRUE | is_event_card == &quot;Yes&quot;) %&gt;% 
+  count(unit, character, name = &quot;event_count&quot;)
+
+ggplot(df_event_counts, aes(x = event_count, 
+                            y = reorder_within(character, event_count, unit), 
+                            fill = character)) +
+  geom_col() + 
+  scale_y_reordered() + 
+  facet_wrap(~ unit, scales = &quot;free_y&quot;, ncol = 2) + 
+  scale_fill_manual(values = char_colors) + 
+  labs(
+    title = &quot;Prevalence of Event Cards per Character&quot;,
+    x = &quot;Number of Event Cards&quot;,
+    y = &quot;Character&quot;
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = &quot;none&quot;,
+    strip.background = element_rect(fill = &quot;ghostwhite&quot;),
+    strip.text = element_text(face = &quot;bold&quot;, size = 10),
+    panel.spacing = unit(1.5, &quot;lines&quot;)
+  )</code></pre>
+<p><img src="p10_files/figure-html/unnamed-chunk-6-1.png" alt="" width="672" /></p>
+<p>The pattern of data are slightly different compared to just the
+number of cards. For LeoNeed, MMJ, and WxS, Saki, Haruka, and Tsukasa
+still have the most event cards but for Nightcord, Mizuki has the most
+event cards and Kanade has the least. For VBS, Akito Shinonome has the
+most event cards. Interestingly enough, Luka and Rin in the Virtual
+Singers group have the most event cards and Miku has the least! Hatsune
+Miku is an icon, a legend, so it’s interesting that she takes a backseat
+in this game.</p>
+<p>Overall, these graphs and visualizations show that there isn’t a huge
+discrepancy amongst characters. While some do have more than others,
+it’s all relatively equal.</p>
+<p>There’s more to this data to be visualized but for now, I’ll stop
+here!</p>
 </div>
 
 

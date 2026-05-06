@@ -13,7 +13,7 @@
 
 <meta name="date" content="2026-05-05" />
 
-<title>Project Sekai Data Cleaning and Graphing</title>
+<title>Project Sekai Data Cleaning and Prelim Graphing</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -292,7 +292,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Project Sekai Data Cleaning and
+<h1 class="title toc-ignore">Project Sekai Data Cleaning and Prelim
 Graphing</h1>
 <h4 class="author">Kryschelle Fakir</h4>
 <h4 class="date">2026-05-05</h4>
@@ -303,6 +303,19 @@ Graphing</h1>
 <p>For this project, I got some data from the Wiki from one of my
 favorite mobile games. I tried webscraping but that simply did not
 work.</p>
+<p>Some necessary background: Project sekai is a rhythm game that
+features a gacha based card system where you use in-game currency (which
+can be bought with real money) to ‘roll’ for cards. Often, you’ll ‘roll’
+on a specific banner. Some of these cards are limited, some are tied to
+a story event, it all depends. There’s a lot that goes into the actual
+rhythm game system as these cards can be used to buff your performance
+during the rhythm game. It’s truly neat.</p>
+<p>The story of the game is that you, the player, are ‘watching’ over
+mini worlds (sekai means world in Japanese) with have characters
+undergoing certain challenges in their lives together. The Virtual
+Singers (the original vocaloids) serve as guides for these characters as
+they navigate real world challenges. It’s a blast to play and I would
+recommend it for anyone who loves rhythm games.</p>
 <p>For this piece, my goal is to clean the data to make it usable for my
 final portfolio piece. I would also like to run some preliminary graphs
 to calculate how many cards exist for each character and group. I want
@@ -314,7 +327,8 @@ favored than others.</p>
 <ul>
 <li>Vivid Bad Squad
 <ul>
-<li>Azusawa Kohane</li>
+<li>Azusawa Kohane <img
+src="https://static.wikia.nocookie.net/projectsekai/images/b/b4/Azusawa_Kohane_chibi.png/revision/latest?cb=20230922154656" /></li>
 <li>Shiraishi An<br />
 </li>
 <li>Shinonome Akito<br />
@@ -449,8 +463,6 @@ df_cleaned &lt;- pjsk_csv %&gt;%
     )
   )
 
-library(tidyverse)
-
 colnames(df_cleaned) &lt;- tolower(trimws(colnames(df_cleaned)))
 
 print(colnames(df_cleaned))</code></pre>
@@ -477,10 +489,10 @@ I thought it would be neat to factor this into the graphing below.</p>
 char_colors &lt;- c(
   # Leo/need
   &quot;Ichika Hoshino&quot; = &quot;#33aaee&quot;, &quot;Saki Tenma&quot; = &quot;#ffdd44&quot;, 
-  &quot;Honami Mochizuki&quot; = &quot;#ff66bb&quot;, &quot;Shiho Hinomori&quot; = &quot;#bbdd22&quot;,
+  &quot;Honami Mochizuki&quot; = &quot;#ff66bb&quot;, &quot;Shiho Honomori&quot; = &quot;#bbdd22&quot;,
   
   # MORE MORE JUMP!
-  &quot;Minori Hanasato&quot; = &quot;#ff88dd&quot;, &quot;Haruka Kiritani&quot; = &quot;#99ccff&quot;, 
+  &quot;Minori Hanasato&quot; = &quot;#ffccaa&quot;, &quot;Haruka Kiritani&quot; = &quot;#99ccff&quot;, 
   &quot;Airi Momoi&quot; = &quot;#ffaaff&quot;, &quot;Shizuku Hinomori&quot; = &quot;#99ffdd&quot;,
   
   # Vivid BAD SQUAD
