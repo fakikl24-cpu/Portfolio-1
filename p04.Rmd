@@ -1,5 +1,8 @@
 ---
 title: "Will it Web-Scrape?"
+name: "Kryschelle Fakir"
+date: "5/04/2026"
+runtime: shiny
 ---
 
 After trying to scrape mulitple websites in Portfolio 3, I've decided to make a shiny app showing which websites can be scrapped and which cannot, as well as with reasons I found in my research. It was a frustrating process but I'm hoping that making a resource for others will bring some joy out of the pain. I've included proof of my tries underneath the shiny app. This will hopefully serve as a resource for others and for myself. 

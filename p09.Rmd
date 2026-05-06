@@ -17,38 +17,38 @@ For this piece, my goal is to clean the data to make it usable for my final port
 
 + Name: Name of the card 
 + Unit/Group: Name of the group
-  + Vivid Bad Squad
-    + Azusawa Kohane ![](https://static.wikia.nocookie.net/projectsekai/images/b/b4/Azusawa_Kohane_chibi.png/revision/latest?cb=20230922154656)
-    + Shiraishi An  
-    + Shinonome Akito  
-    + Aoyagi Toya
-  + Nightcord at 25:00 
-    + Yoisaki Kanade  
-    + Asahina Mafuyu  
-    + Shinonome Ena  
-    + Akiyama Mizuki
-  + More More Jump! 
-    + Hanasato Minori  
-    + Kiritani Haruka  
-    + Momoi Airi  
-    + Hinomori Shizuku
-  + Leo Need
-    + Hoshino Ichika
-    + Tenma Saki
-    + Mochizuki Honami
-    +Hinomori Shiho
-  + Wonderlands x Showtime 
-    + Tenma Tsukasa  
-    + Otori Emu  
-    + Kusanagi Nene  
-    + Kamishiro Rui
+  + Vivid Bad Squad![](https://i.pinimg.com/736x/6c/0b/07/6c0b078857c48ef6f7168237b7c48cb9.jpg){width=40px}
+    + Azusawa Kohane![](https://i.pinimg.com/236x/11/34/0d/11340dcb3d0cb23dfe1c175f492df976.jpg){width=40px}
+    + Shiraishi An![](https://i.pinimg.com/236x/03/3f/78/033f7813ce196b6ced6ac9cb838426ab.jpg){width=40px}
+    + Shinonome Akito![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Nc3kE0-yVDexafZdWuWKX_Mq8VsXXYoFfw&s){width=40px}
+    + Aoyagi Toya![](https://i.pinimg.com/736x/12/03/21/1203217bf039fa0f26fbec6e1a750a4b.jpg){width=40px}
+  + Nightcord at 25:00![](https://i.pinimg.com/736x/df/3b/12/df3b12af9ef1beee8b8e76cc060f242f.jpg){width=40px} 
+    + Yoisaki Kanade![](https://i.pinimg.com/736x/a0/c3/f8/a0c3f83438270d062e6c3af207f36831.jpg){width=40px}  
+    + Asahina Mafuyu![](https://i.pinimg.com/474x/f7/f8/c4/f7f8c4e56ffb79dfd880f654937eb2da.jpg){width=40px}    
+    + Shinonome Ena![](https://i.pinimg.com/236x/56/23/c0/5623c0e9c865784543d36d275835fdcd.jpg){width=40px}    
+    + Akiyama Mizuki![](https://i.pinimg.com/736x/4d/d5/a4/4dd5a40d915dbfe126a938f9eb931372.jpg){width=40px}  
+  + More More Jump! ![](https://i.pinimg.com/736x/22/53/1d/22531d93041b08ce619bca257951dcf1.jpg){width=60px}
+    + Hanasato Minori![](https://i.pinimg.com/736x/56/30/f2/5630f2906458a23726daa2806e2c5454.jpg){width=40px}    
+    + Kiritani Haruka![](https://i.pinimg.com/736x/fa/49/2e/fa492e01b384c400739359fc42654ec2.jpg){width=40px}    
+    + Momoi Airi![](https://i.pinimg.com/736x/cd/d6/7c/cdd67c8a05e1d1a4fa05fbed2571843b.jpg){width=40px}     
+    + Hinomori Shizuku![](https://i.pinimg.com/736x/1e/85/d9/1e85d95643911fc583e972e00036db29.jpg){width=40px}  
+  + Leo Need![](https://i.pinimg.com/236x/f4/48/cf/f448cfb4c91f75df11e637b09d493341.jpg){width=40px}  
+    + Hoshino Ichika![](https://i.pinimg.com/474x/65/2a/33/652a33815fdd2c5a3538595d072b1e24.jpg){width=40px}  
+    + Tenma Saki![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-_E24nODyx8Ep4mHFcOZBLK6SqZNH2FvVpQ&s){width=40px}  
+    + Mochizuki Honami![](https://i.pinimg.com/236x/11/97/dd/1197ddba70d8126950dd64237d0ee186.jpg){width=40px}  
+    +Hinomori Shiho![](https://i.pinimg.com/736x/4e/70/1c/4e701c85f43432d37e1489f4b22cbdc0.jpg){width=40px}  
+  + Wonderlands x Showtime![](https://i.pinimg.com/736x/8d/f0/7d/8df07d8cc4f40d3afcccfe4093a3d937.jpg){width=60px}   
+    + Tenma Tsukasa![](https://i.pinimg.com/736x/95/f2/09/95f2092cf04af764e68a3bfed94b8a94.jpg){width=40px}  
+    + Otori Emu![](https://i.pinimg.com/736x/d9/a3/fa/d9a3fa9b9088acb2b65d221ff9b4c065.jpg){width=40px}    
+    + Kusanagi Nene![](https://i.pinimg.com/736x/d8/15/04/d815043386aae4a83f3c1fa9c8a62f65.jpg){width=40px}    
+    + Kamishiro Rui![](https://i.pinimg.com/474x/00/e1/99/00e199e97fbc0473f35342cf38c54eb1.jpg){width=40px} 
   + Virtual Singer
-    + Hatsune Miku
-    + Kagamine Rin
-    + Kagamine Len
-    + Megurine Luka
-    + MEIKO
-    + KAITO
+    + Hatsune Miku![](https://i.pinimg.com/736x/39/2b/45/392b45aa17e9eccaa456b1ec4b9f2483.jpg){width=40px} 
+    + Kagamine Rin![](https://i.pinimg.com/736x/37/57/84/375784a10733e6d665dd14fad1114c28.jpg){width=40px}
+    + Kagamine Len![](https://i.pinimg.com/474x/2e/6d/68/2e6d6845a079aaa5298e12a751a2170d.jpg){width=40px}
+    + Megurine Luka![](https://i.pinimg.com/736x/73/27/a7/7327a7fa73c955a7d628aedff87e376f.jpg){width=40px}
+    + MEIKO![](https://i.pinimg.com/236x/6e/c5/ab/6ec5ab616f80bd65f5d8fc224ad9eccf.jpg){width=40px}
+    + KAITO![](https://i.pinimg.com/736x/e2/53/aa/e253aa31e689b1ec386ac0fff7555604.jpg){width=40px}
 + Character: Name of the character 
   + Character names are listed above under their respective groups.
 + Type: The attribute assigned to each card. 

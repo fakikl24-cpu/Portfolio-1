@@ -1,5 +1,8 @@
 ---
 title: "Journal Shiny App"
+name: "Kryschelle Fakir"
+date: "5/04/2026"
+runtime: shiny
 ---
 
 By now, it's clear that I really enjoy making shiny apps. I find them simple but really fun and useful! For this one, I wanted to try making an app that saved entries as I wrote in them. I couldn't figure out how to generate my CV so wanted to try making a simplified version of it. As such, I attempted a shiny app where you can save entries. This would, hypothetically, function as a digital journal or notebook. I had to google how to save the data (https://daattali.com/shiny/persistent-data-storage/) and I'm not confident that it works as intended and it's not super pretty but it was worth a shot. 

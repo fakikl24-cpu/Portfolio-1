@@ -1,5 +1,8 @@
 ---
-title: "Portfolio 3"
+title: "Sciurids and Webscraping"
+name: "Kryschelle Fakir"
+date: "5/04/2026"
+output: html_document
 ---
 
 For this Portfolio piece, I wanted to practice webscraping. I've tried doing this with Youtube and various retail websites and ran into a multitude of issues. As such, I've decided to webscrape from a Scriurids Wikipedia page. After making a shiny app, I wanted to try and make some interesting interactive features. I stumbled upon this github (here: https://github.com/rstudio/DT) about interactive data tables. As such, those are included at the end of this portfolio.

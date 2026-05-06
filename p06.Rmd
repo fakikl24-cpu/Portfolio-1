@@ -1,5 +1,8 @@
 ---
-title: "Portfolio 6"
+title: "FYP Analyses: From SPSS to R"
+name: "Kryschelle Fakir"
+date: "5/04/2026"
+output: html_document
 ---
 
 For this portfolio piece, I wanted to test myself and see if I could run some of the analyses I ran for my FYP in SPSS in R. While I did not re-run all of my analyses, I did run a subset of them. The dataset used is also already mainly cleaned. I primarily wanted to practice recoding and mean scoring and then running correlations. 

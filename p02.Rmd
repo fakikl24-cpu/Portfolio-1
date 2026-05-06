@@ -2,6 +2,7 @@
 title: "Playing around with Shiny"
 name: "Kryschelle Fakir"
 date: "5/04/2026"
+runtime: shiny
 ---
 
 This portfolio aims to play around with Shiny apps. In this app, I hope to have the user select a mood and receive a list of songs, video games, youtubers, and/or things to do while they feel like this. The main goal is to make a app that gives me a list of things to do during certain moods. I often forget the things I have access to when I'm in certain moods and this may be a fun tool to use to mitigate that fatigue. 

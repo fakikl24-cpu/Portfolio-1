@@ -10,7 +10,7 @@ output:
     theme: lumen
 ---
 
-```{r load-packages, message=FALSE}
+```{r, load-packages, message=FALSE}
 
 library(tufte)
 library(tidyverse)

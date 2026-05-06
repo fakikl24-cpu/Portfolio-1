@@ -1,5 +1,8 @@
 ---
 title: "Age, Accuracy, and Juvenile Offenses"
+name: "Kryschelle Fakir"
+date: "5/04/2026"
+output: html_document
 ---
 
 For this portfolio piece, I really want to expand on Lab 9. I'm especially interested in plotting some more of the variables that we weren't able to examine there. While I don't have specific hypotheses, I do want to practice visualizing comparisons between groups. 
